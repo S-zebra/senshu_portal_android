@@ -1,26 +1,24 @@
 package szebra.senshu_timetable.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.security.GeneralSecurityException;
-import java.security.Key;
+import java.io.IOException;
 
+import io.realm.Realm;
 import szebra.senshu_timetable.R;
-import szebra.senshu_timetable.util.CryptManager;
+import szebra.senshu_timetable.models.Credential;
+import szebra.senshu_timetable.util.PortalCommunicator;
 
 public class LoginActivity extends AppCompatActivity {
   private Button loginButton;
-  private SharedPreferences pref;
   private EditText usernameBox, passwordBox;
   
   @Override
@@ -30,45 +28,53 @@ public class LoginActivity extends AppCompatActivity {
     loginButton = (Button) findViewById(R.id.loginbutton);
     usernameBox = (EditText) findViewById(R.id.studentid);
     passwordBox = (EditText) findViewById(R.id.password);
-    final Context context = this;
-    pref = PreferenceManager.getDefaultSharedPreferences(this);
+  
+    final PortalCommunicator communicator = PortalCommunicator.getInstance();
+    final Realm realm = Realm.getDefaultInstance();
+    
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Key key = CryptManager.generateKey();
-        byte[] en_un, en_pw;
-        
-        try {
-          en_un = CryptManager.encrypt(usernameBox.getText().toString().getBytes(), key);
-          Log.d("Encryption(UN)", new String(en_un));
-        } catch (GeneralSecurityException e) {
-          Log.e("Unsupported key", e.toString());
-          en_un = new byte[3];
-        }
-        
-        try {
-          en_pw = CryptManager.encrypt(passwordBox.getText().toString().getBytes(), key);
-          Log.d("Encryption(PW)", new String(en_pw));
-        } catch (GeneralSecurityException e) {
-          Log.e("Unsupported key", e.toString());
-          en_pw = new byte[3];
-        }
-        
-        SharedPreferences.Editor editor = pref.edit();
-        String encodedKey = Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
-        String encodedUN = Base64.encodeToString(en_un, Base64.DEFAULT);
-        String encodedPW = Base64.encodeToString(en_pw, Base64.DEFAULT);
-        editor.putString("key", encodedKey);
-        editor.putString("userName", encodedUN);
-        editor.putString("pwd", encodedPW);
-        editor.commit();
-        startActivity(new Intent(context, MainActivity.class));
-        finish();
+        new AsyncTask<Void, Void, Boolean>() {
+    
+          String userName, password;
+    
+          @Override
+          protected void onPreExecute() {
+            userName = usernameBox.getText().toString();
+            password = passwordBox.getText().toString();
+          }
+    
+          @Override
+          protected Boolean doInBackground(Void... params) {
+            try {
+              return communicator.logIn(userName, password);
+            } catch (IOException e) {
+              new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                  Toast.makeText(LoginActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
+                }
+              });
+              return false;
+            }
+          }
+    
+          @Override
+          protected void onPostExecute(Boolean loginSuccess) {
+            if (loginSuccess) {
+              realm.beginTransaction();
+              realm.copyToRealmOrUpdate(new Credential(1, userName, password));
+              realm.commitTransaction();
+              realm.close();
+              startActivity(new Intent(LoginActivity.this, MainActivity.class));
+              finish();
+            } else {
+              Toast.makeText(LoginActivity.this, "ユーザー名またはパスワードが違います。", Toast.LENGTH_LONG).show();
+            }
+          }
+        }.execute();
       }
     });
-  }
-  
-  private void encryptString(String string) {
-    
   }
 }

@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class CryptManager {
   private static final String TAG = "CryptManager";
   private static final String AES = "AES";
-  private static int KEY_LENGTH_BYTES = 16;
+  private static int KEY_LENGTH_BYTES = 64;
   private static int KEY_LENGTH_BITS = KEY_LENGTH_BYTES * 8;
   
   public static Key generateKey() {

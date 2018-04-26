@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.1"
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "szebra.senshu_timetable"
         minSdkVersion 14
@@ -28,5 +28,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.+'
     compile 'io.realm:android-adapters:2.0.0'
+    compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
 }

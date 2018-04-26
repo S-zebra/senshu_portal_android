@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import szebra.senshu_timetable.structures.Lecture;
+import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.R;
 
 import static szebra.senshu_timetable.R.id.cell;
