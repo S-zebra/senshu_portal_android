@@ -3,12 +3,14 @@ package szebra.senshu_timetable.views;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import szebra.senshu_timetable.models.Lecture;
+import java.util.Date;
+
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.models.Lecture;
+import szebra.senshu_timetable.util.ClassHours;
 
 import static szebra.senshu_timetable.R.id.cell;
 import static szebra.senshu_timetable.R.id.classroom;
@@ -20,7 +22,9 @@ import static szebra.senshu_timetable.R.id.classroom;
 public class ClassCell extends ConstraintLayout {
   //コンストラクタ
   private TextView className, classRoom, teacherName;
+  private Lecture lecture;
   private ConstraintLayout cr;
+  private int day, period;
   
   public ClassCell(Context context) {
     this(context, null);
@@ -33,7 +37,8 @@ public class ClassCell extends ConstraintLayout {
   public ClassCell(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     View layout = View.inflate(context, R.layout.class_cell, this);
-    className = (TextView) layout.findViewById(R.id.className);
+    cr = (ConstraintLayout) layout.findViewById(R.id.cell);
+    className = (TextView) layout.findViewById(R.id.start_time);
     classRoom = (TextView) layout.findViewById(classroom);
     teacherName = (TextView) layout.findViewById(R.id.teacherName);
     cr = (ConstraintLayout) layout.findViewById(cell);
@@ -44,28 +49,22 @@ public class ClassCell extends ConstraintLayout {
   
   public void setLecture(Lecture lecture) {
     if (lecture != null) {
+      this.lecture = lecture;
       className.setText(lecture.getLectureName());
       classRoom.setText(lecture.getClassroomName());
       teacherName.setText(lecture.getTeacherName());
+      period = lecture.getPeriod();
+      day = lecture.getDay();
+      highlight();
     }
   }
   
-  public void setCellColor(int color) {
-    cr.setBackgroundColor(color);
-  }
-  
-  public void setClassName(String cName) {
-    Log.d("setClassName", "cName: " + cName);
-    className.setText(cName);
-  }
-  
-  public void setClassRoom(String crName) {
-    Log.d("setClassName", "crName: " + crName);
-    classRoom.setText(crName);
-  }
-  
-  public void setTeacherName(String tName) {
-    Log.d("setClassName", "tName: " + tName);
-    teacherName.setText(tName);
+  private void highlight() {
+    if (lecture.getDay() == new Date().getDay()) {
+      cr.setBackgroundColor(getResources().getColor(R.color.accent1));
+      if (ClassHours.getInstance().isInPeriod(lecture.getPeriod())) {
+        cr.setBackgroundColor(getResources().getColor(R.color.accent2));
+      }
+    }
   }
 }

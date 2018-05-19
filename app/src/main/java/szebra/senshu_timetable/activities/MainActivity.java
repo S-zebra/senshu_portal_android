@@ -2,7 +2,6 @@ package szebra.senshu_timetable.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,9 +18,6 @@ import android.widget.Toast;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,6 +28,7 @@ import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.structures.Timetable;
 import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
+import szebra.senshu_timetable.views.PeriodHoursView;
 
 public class MainActivity extends Activity {
   private TableLayout timetable;
@@ -41,10 +38,7 @@ public class MainActivity extends Activity {
     R.id.row_4th, R.id.row_5th, R.id.row_6th,
     R.id.row_7th};
   private String youbi[] = {"月", "火", "水", "木", "金", "土"};
-  private String classBeginTimes[] = {"9:00", "10:45", "13:05", "14:50", "16:35", "18:15", ""};
-  private String classEndTimes[] = {"10:30", "12:15", "14:35", "16:20", "18:05", "19:45", ""};
   
-  private int today;
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
   private Realm mRealm;
@@ -59,8 +53,6 @@ public class MainActivity extends Activity {
     mProgressBar = (ProgressBar) findViewById(R.id.circularIndicator);
     mWaitingLabel = (TextView) findViewById(R.id.loadingText);
   
-  
-    today = new Date().getDay();
     addtodayRow();
   
     RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
@@ -80,11 +72,6 @@ public class MainActivity extends Activity {
     Log.d("MainActivity", "getTimeTableFromPortal() fired");
     new AsyncTask<Void, Integer, Document>() {
       PortalCommunicator communicator = PortalCommunicator.getInstance();
-  
-      @Override
-      protected void onPreExecute() {
-    
-      }
       
       @Override
       protected Document doInBackground(Void... params) {
@@ -118,7 +105,6 @@ public class MainActivity extends Activity {
       
       @Override
       protected void onPostExecute(Document document) {
-        Log.d("時間割アナライザ", "解析を移譲しました");
         Timetable.parseFrom(document);
         setTimetable();
       }
@@ -153,63 +139,21 @@ public class MainActivity extends Activity {
     mWaitingLabel.startAnimation(anim);
   }
   
-  public int getCurrentClassIndex() {
-    for (int i = 0; i < classBeginTimes.length; i++) {
-      if (isBetween(classBeginTimes[i], classEndTimes[i])) {
-        return i;
-      }
-    }
-    return -1;
-  }
-  
-  public boolean isBetween(String begin, String end) {
-    Calendar currentCal = Calendar.getInstance();
-    
-    Calendar beginCal = Calendar.getInstance();
-    Calendar endCal = Calendar.getInstance();
-    try {
-      String beginTime[] = begin.split(":");
-      beginCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(beginTime[0]));
-      beginCal.set(Calendar.MINUTE, Integer.parseInt(beginTime[1]));
-      
-      String endTime[] = end.split(":");
-      endCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime[0]));
-      endCal.set(Calendar.MINUTE, Integer.parseInt(endTime[1]));
-      
-      return (currentCal.after(beginCal) && currentCal.before(endCal));
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-  
   public void setTimetable() {
-    int currentClassIndex = getCurrentClassIndex();
     for (int period = 0; period < rows.length; period++) {
-      TableRow r = (TableRow) findViewById(rows[period]);
+      TableRow row = (TableRow) findViewById(rows[period]);
+      PeriodHoursView phv = new PeriodHoursView(this);
+      phv.setPeriod(period);
+      row.addView(phv);
       for (int day = 0; day < youbi.length; day++) {
         ClassCell cell = new ClassCell(this);
         cell.setLecture(mRealm.where(Lecture.class).equalTo("day", day).equalTo("period", period).findFirst());
-        r.addView(cell);
-        if (today != 0 && day == today - 1) {
-          if (period == currentClassIndex) {
-            cell.setBackgroundColor(Color.argb(128, 255, 101, 207));
-          } else {
-            cell.setBackgroundColor(Color.argb(128, 127, 185, 255));
-          }
-        }
+        row.addView(cell);
       }
-      r.addView(createPeriodLabel(period), 0);
       if (mProgressBar.getVisibility() != View.GONE) {
         hideProgressBar();
       }
     }
-  }
-  
-  private TextView createPeriodLabel(int i) {
-    TextView periodLabel = new TextView(this);
-    periodLabel.setGravity(Gravity.CENTER);
-    periodLabel.setText(classBeginTimes[i] + "\n" + String.format(Locale.ENGLISH, "%d", i + 1) + "\n" + classEndTimes[i]);
-    return periodLabel;
   }
   
   private void addtodayRow() {

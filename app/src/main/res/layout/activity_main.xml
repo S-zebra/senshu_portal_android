@@ -50,37 +50,44 @@
         <TableRow
           android:id="@+id/row_1st"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_2nd"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_3rd"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_4th"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_5th"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_6th"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
 
         <TableRow
           android:id="@+id/row_7th"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:background="@color/cellBorder"/>
       </TableLayout>
     </ScrollView>
 
