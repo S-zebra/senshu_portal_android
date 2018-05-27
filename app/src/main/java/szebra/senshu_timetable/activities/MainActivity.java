@@ -1,9 +1,9 @@
 package szebra.senshu_timetable.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -30,7 +30,7 @@ import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
   private TableLayout timetable;
   
   private int rows[] = {

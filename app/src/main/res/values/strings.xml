@@ -8,10 +8,10 @@
   <string name="error_required_field">This field is required</string>
   <string name="prompt_userid">Student ID</string>
   <string name="label_loading_info">Loading...</string>
-  <string name="title_activity_todo">ToDo</string>
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="logging_in">Logging in...</string>
   <string name="comm_failed">Failed to communicate</string>
   <string name="wrong_id_pass">User ID or password is not correct.</string>
+  <string name="title_activity_to_do_list" translatable="false">ToDo</string>
 </resources>

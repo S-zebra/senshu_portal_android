@@ -1,14 +1,17 @@
 package szebra.senshu_timetable.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.Date;
 
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.activities.ToDoListActivity;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.util.ClassHours;
 
@@ -47,20 +50,30 @@ public class ClassCell extends ConstraintLayout {
     teacherName.setText("");
   }
   
-  public void setLecture(Lecture lecture) {
+  public void setLecture(final Lecture lecture) {
     if (lecture != null) {
       this.lecture = lecture;
-      className.setText(lecture.getLectureName());
+      className.setText(lecture.getName());
       classRoom.setText(lecture.getClassroomName());
       teacherName.setText(lecture.getTeacherName());
       period = lecture.getPeriod();
       day = lecture.getDay();
+      setClickable(true);
+      setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent i = new Intent(getContext(), ToDoListActivity.class);
+          Log.d("Passing Lecture ID", String.valueOf(lecture.getId()));
+          i.putExtra("Lecture", lecture.getId());
+          getContext().startActivity(i);
+        }
+      });
       highlight();
     }
   }
   
   private void highlight() {
-    if (lecture.getDay() == new Date().getDay()) {
+    if (lecture.getDay() == (new Date().getDay()) - 1) {
       cr.setBackgroundColor(getResources().getColor(R.color.colorAccent));
       if (ClassHours.getInstance().isInPeriod(lecture.getPeriod())) {
         cr.setBackgroundColor(getResources().getColor(R.color.colorSubAccent));

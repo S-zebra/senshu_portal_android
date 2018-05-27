@@ -7,7 +7,6 @@
   <string name="prompt_userid">学籍番号</string>
   <string name="prompt_password">パスワード</string>
   <string name="label_loading_info">読み込み中…</string>
-  <string name="title_activity_todo">Todo</string>
   <string name="logging_in">ログイン中…</string>
   <string name="comm_failed">通信に失敗しました。</string>
   <string name="wrong_id_pass">ユーザー名またはパスワードが違います。</string>

@@ -9,30 +9,30 @@ import io.realm.annotations.PrimaryKey;
 
 public class Lecture extends RealmObject {
   @PrimaryKey
-  private long id;
+  private int id;
   private int day;
   private int period;
-  private String lectureName;
+  private String name;
   private String classroomName;
   private String teacherName;
   
   public Lecture() {
   }
   
-  public Lecture(long id, int day, int period, String lectureName, String teacherName, String classroomName) {
+  public Lecture(int id, int day, int period, String name, String teacherName, String classroomName) {
     this.id = id;
     this.day = day;
     this.period = period;
-    this.lectureName = lectureName;
+    this.name = name;
     this.classroomName = classroomName;
     this.teacherName = teacherName;
   }
   
-  public long getId() {
+  public int getId() {
     return id;
   }
   
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
   
@@ -52,12 +52,12 @@ public class Lecture extends RealmObject {
     this.period = period;
   }
   
-  public String getLectureName() {
-    return lectureName;
+  public String getName() {
+    return name;
   }
   
-  public void setLectureName(String lectureName) {
-    this.lectureName = lectureName;
+  public void setName(String name) {
+    this.name = name;
   }
   
   public String getClassroomName() {
