@@ -61,9 +61,9 @@ public class ClassCell extends ConstraintLayout {
   
   private void highlight() {
     if (lecture.getDay() == new Date().getDay()) {
-      cr.setBackgroundColor(getResources().getColor(R.color.accent1));
+      cr.setBackgroundColor(getResources().getColor(R.color.colorAccent));
       if (ClassHours.getInstance().isInPeriod(lecture.getPeriod())) {
-        cr.setBackgroundColor(getResources().getColor(R.color.accent2));
+        cr.setBackgroundColor(getResources().getColor(R.color.colorSubAccent));
       }
     }
   }

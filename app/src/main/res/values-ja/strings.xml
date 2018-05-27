@@ -2,10 +2,13 @@
 <resources>
   <string name="app_name">My時間割</string>
   <string name="action_sign_in_short">ログイン</string>
-  <string name="error_field_required">この欄は必須です</string>
+  <string name="error_required_field">この欄は必須です</string>
   <string name="title_activity_login">ポータルにログイン</string>
   <string name="prompt_userid">学籍番号</string>
   <string name="prompt_password">パスワード</string>
   <string name="label_loading_info">読み込み中…</string>
   <string name="title_activity_todo">Todo</string>
+  <string name="logging_in">ログイン中…</string>
+  <string name="comm_failed">通信に失敗しました。</string>
+  <string name="wrong_id_pass">ユーザー名またはパスワードが違います。</string>
 </resources>

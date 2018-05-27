@@ -28,7 +28,7 @@ public class PortalCommunicator {
   
   private static final String USERNAME_FIELD = "login";
   private static final String PASSWORD_FIELD = "passwd";
-  private static final String LOGIN_FAILED_MESSAGE = "ログインに失敗しました。";
+  private static final String LOGIN_FAILED_MESSAGE = "失敗しました";
   
   public enum MoveMode {POST, GET}
   

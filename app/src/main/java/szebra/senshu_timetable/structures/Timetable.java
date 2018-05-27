@@ -32,14 +32,15 @@ public class Timetable {
       for (int day = 0; day < 6; day++) {
         Element currentCell = currentPeriod.get(day);
   
-        //aタグがあれば、そこに授業があると見なす
         Element kougiLink = currentCell.getElementsByTag("a").first();
   
+        //aタグがあれば、そこに授業があると見なす
         if (kougiLink != null) {
-          int kougiId = Integer.parseInt(kougiLink.attr("href").replaceAll(".+=", ""));
+          int kougiId = day * 10 + period;
           String className = currentCell.getElementsByTag("a").first().text().replaceAll("[\\[\\]]", "");
           String teacherName = currentCell.textNodes().get(3).toString();
           String classroomName = currentCell.textNodes().get(4).toString().trim();
+//          boolean skip=currentCell
           Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName);
           realmConnection.copyToRealmOrUpdate(currentLecture);
         }
