@@ -29,7 +29,7 @@ import szebra.senshu_timetable.views.MyDatePicker;
 
 public class ToDoEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
   private Realm mRealm;
-  private Lecture lecture;
+  private Lecture targetLecture;
   private ToDo todo;
   private EditText titleBox, deadlineBox, detailBox;
   private Spinner lectureSpinner;
@@ -57,7 +57,8 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-    prepareLectureSpinner();
+  
+    deadlineBox.setFocusable(false);
     deadlineBox.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -78,14 +79,13 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
     
     //Lectureの取得
     int lectureId = intent.getIntExtra("Lecture", -1);
-    try {
-      if (lectureId != -1) {
-        lecture = mRealm.where(Lecture.class).equalTo("id", lectureId).findFirst();
-      }
-    } catch (NullPointerException e) {
+    Log.d("onCreate: ", "lectureId: " + lectureId);
+    if (lectureId != -1) {
+      targetLecture = mRealm.where(Lecture.class).equalTo("id", lectureId).findFirst();
+    } else {
       Toast.makeText(this, "エラー: 授業IDが無効です", Toast.LENGTH_LONG).show();
     }
-    
+    prepareLectureSpinner();
     
     int todoId = intent.getIntExtra("ToDo", -1);
     //新規作成
@@ -115,11 +115,20 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
   
   public void prepareLectureSpinner() {
     RealmResults<Lecture> results = mRealm.where(Lecture.class).findAllSorted("id");
+    int curPos = 0;
+    for (Lecture lecture : results) {
+      if (lecture.getId() == targetLecture.getId()) {
+        break;
+      } else {
+        curPos++;
+      }
+    }
     Lecture[] lectures = new Lecture[results.size()];
     results.toArray(lectures);
-    ArrayAdapter<Lecture> adapter = new ArrayAdapter<Lecture>(this, android.R.layout.simple_spinner_item, lectures);
+    ArrayAdapter<Lecture> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lectures);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     lectureSpinner.setAdapter(adapter);
+    lectureSpinner.setSelection(curPos);
   }
   
   @Override
@@ -153,12 +162,6 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
   }
   
   @Override
-  protected void onPause() {
-    super.onPause();
-    mRealm.close();
-  }
-  
-  @Override
   public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
     deadline.set(year, month, dayOfMonth);
     Log.d("onDateSet", String.valueOf(deadline.get(Calendar.YEAR)));
@@ -170,5 +173,11 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
     MyDatePicker datePicker = new MyDatePicker();
     datePicker.setCalendar(deadline);
     datePicker.show(getSupportFragmentManager(), "Select Deadline");
+  }
+  
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mRealm.close();
   }
 }
