@@ -63,6 +63,10 @@ public class PortalCommunicator {
    * @throws IOException Thrown when offline
    */
   public boolean logIn(String userName, String password) throws IOException {
+    //Check length
+    if (userName == null || password == null || userName.isEmpty() || password.isEmpty()) {
+      return false;
+    }
     //Get cookies from top page
     Log.d(CLASS_NAME, "GET'ing top page...");
     connection = Jsoup.connect(PortalURL.LOGIN_URL);

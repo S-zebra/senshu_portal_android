@@ -9,9 +9,16 @@
   <string name="prompt_userid">Student ID</string>
   <string name="label_loading_info">Loading...</string>
 
-  <!-- TODO: Remove or change this placeholder text -->
   <string name="logging_in">Logging in...</string>
   <string name="comm_failed">Failed to communicate</string>
   <string name="wrong_id_pass">User ID or password is not correct.</string>
   <string name="title_activity_to_do_list" translatable="false">ToDo</string>
+  <string name="title_activity_todo_add">Add new ToDo</string>
+  <string name="edit_todo_date_placeholder" translatable="false">20XX/YY/DD</string>
+  <string name="edit_todo_label_title">Title</string>
+  <string name="edit_todo_label_deadline">Deadline</string>
+  <string name="edit_todo_label_subject">Subject</string>
+  <string name="edit_todo_label_detail">Detail</string>
+  <string name="label_no_title">(No title)</string>
+  <string name="label_no_text">(No description)</string>
 </resources>

@@ -14,9 +14,9 @@ public class ToDoViewHolder extends RecyclerView.ViewHolder {
   
   public ToDoViewHolder(View itemView) {
     super(itemView);
-    titleLabel = (TextView) itemView.findViewById(R.id.taskNameLabel);
-    dLineLabel = (TextView) itemView.findViewById(R.id.deadlineLabel);
-    lectureLabel = (TextView) itemView.findViewById(R.id.lectureLabel);
-    detailLabel = (TextView) itemView.findViewById(R.id.taskDetailLabel);
+    titleLabel = itemView.findViewById(R.id.taskNameLabel);
+    dLineLabel = itemView.findViewById(R.id.deadlineLabel);
+    lectureLabel = itemView.findViewById(R.id.lectureLabel);
+    detailLabel = itemView.findViewById(R.id.taskDetailLabel);
   }
 }

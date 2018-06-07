@@ -10,4 +10,11 @@
   <string name="logging_in">ログイン中…</string>
   <string name="comm_failed">通信に失敗しました。</string>
   <string name="wrong_id_pass">ユーザー名またはパスワードが違います。</string>
+  <string name="title_activity_todo_add">新しいToDoを追加</string>
+  <string name="edit_todo_label_title">タイトル</string>
+  <string name="edit_todo_label_deadline">締め切り</string>
+  <string name="edit_todo_label_subject">教科</string>
+  <string name="edit_todo_label_detail">詳細</string>
+  <string name="label_no_title">(タイトルなし)</string>
+  <string name="label_no_text">(説明なし)</string>
 </resources>

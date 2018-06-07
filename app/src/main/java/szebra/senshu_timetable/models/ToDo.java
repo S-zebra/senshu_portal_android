@@ -3,26 +3,28 @@ package szebra.senshu_timetable.models;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by s-zebra on 2018/05/27.
  */
 public class ToDo extends RealmObject {
+  @PrimaryKey
   int id;
   String title, detailText;
-  Lecture lecture;
+  int lectureId;
   Date deadline;
   
   public ToDo() {
   
   }
   
-  public ToDo(int id, String title, Date deadline, Lecture lecture, String detailText) {
+  public ToDo(int id, String title, Date deadline, int lectureId, String detailText) {
     this.id = id;
     this.title = title;
     this.detailText = detailText;
     this.deadline = deadline;
-    this.lecture = lecture;
+    this.lectureId = lectureId;
   }
   
   public int getId() {
@@ -49,12 +51,12 @@ public class ToDo extends RealmObject {
     this.detailText = detailText;
   }
   
-  public Lecture getLecture() {
-    return lecture;
+  public int getLectureId() {
+    return lectureId;
   }
   
-  public void setLecture(Lecture lecture) {
-    this.lecture = lecture;
+  public void setLectureId(int lectureId) {
+    this.lectureId = lectureId;
   }
   
   public Date getDeadline() {

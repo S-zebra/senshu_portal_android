@@ -75,4 +75,9 @@ public class Lecture extends RealmObject {
   public void setTeacherName(String teacherName) {
     this.teacherName = teacherName;
   }
+  
+  @Override
+  public String toString() {
+    return getName() + " (" + getTeacherName() + ")";
+  }
 }

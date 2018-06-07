@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,6 +25,7 @@ public class ClassCell extends ConstraintLayout {
   //コンストラクタ
   private TextView className, classRoom, teacherName;
   private Lecture lecture;
+  private int lectureId;
   private ConstraintLayout cr;
   private int day, period;
   
@@ -53,6 +53,7 @@ public class ClassCell extends ConstraintLayout {
   public void setLecture(final Lecture lecture) {
     if (lecture != null) {
       this.lecture = lecture;
+      lectureId = this.lecture.getId();
       className.setText(lecture.getName());
       classRoom.setText(lecture.getClassroomName());
       teacherName.setText(lecture.getTeacherName());
@@ -63,8 +64,7 @@ public class ClassCell extends ConstraintLayout {
         @Override
         public void onClick(View v) {
           Intent i = new Intent(getContext(), ToDoListActivity.class);
-          Log.d("Passing Lecture ID", String.valueOf(lecture.getId()));
-          i.putExtra("Lecture", lecture.getId());
+          i.putExtra("Lecture", lectureId);
           getContext().startActivity(i);
         }
       });

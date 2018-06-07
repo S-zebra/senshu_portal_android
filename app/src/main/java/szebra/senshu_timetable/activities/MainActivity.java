@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     Log.d("MainActivity", "getTimeTableFromPortal() fired");
     new AsyncTask<Void, Integer, Document>() {
       PortalCommunicator communicator = PortalCommunicator.getInstance();
+      boolean hasCredential;
       
       @Override
       protected Document doInBackground(Void... params) {
@@ -81,16 +82,21 @@ public class MainActivity extends AppCompatActivity {
             Log.d("時間割取得", "ログインしていません。");
             RealmResults<Credential> result = realm.where(Credential.class).findAll();
             if (result.size() == 0) {
+              hasCredential = false;
               Log.d("時間割取得", "保存されたアカウント情報はありません。");
               startActivity(new Intent(MainActivity.this, LoginActivity.class));
               finish();
               this.cancel(true);
             } else {
               Log.d("時間割取得", "アカウント情報が見つかりました。ログインします。");
-              communicator.logIn(result.first());
+              if (communicator.logIn(result.first())) {
+                Log.d("時間割取得", "ログイン処理完了。");
+              } else {
+                return null;
+              }
             }
           }
-          Log.d("時間割取得", "ログイン処理完了。");
+          realm.close();
           return communicator.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.MY_PAGE_URL, null);
         } catch (IOException e) {
           this.cancel(true);
@@ -100,13 +106,19 @@ public class MainActivity extends AppCompatActivity {
       
       @Override
       protected void onCancelled() {
-        Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
+        if (hasCredential) {
+          Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
+        }
       }
       
       @Override
       protected void onPostExecute(Document document) {
-        Timetable.parseFrom(document);
-        setTimetable();
+        if (document != null) {
+          Timetable.parseFrom(document);
+          setTimetable();
+        } else {
+          Toast.makeText(MainActivity.this, "通信に失敗しました。ログイン情報が変更された可能性があります", Toast.LENGTH_LONG).show();
+        }
       }
     }.execute();
   }
