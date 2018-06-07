@@ -3,7 +3,6 @@ package szebra.senshu_timetable.activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -68,6 +67,11 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
     
     //日付(Deadline)周り
     deadline = Calendar.getInstance();
+    deadline.clear(Calendar.HOUR_OF_DAY);
+    deadline.clear(Calendar.MINUTE);
+    deadline.clear(Calendar.SECOND);
+    deadline.clear(Calendar.MILLISECOND);
+    
     dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
     
     Intent intent = getIntent();
@@ -163,7 +167,8 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
   }
   
   public void askDeadline() {
-    DialogFragment DPFragment = new MyDatePicker();
-    DPFragment.show(getSupportFragmentManager(), "Select Deadline");
+    MyDatePicker datePicker = new MyDatePicker();
+    datePicker.setCalendar(deadline);
+    datePicker.show(getSupportFragmentManager(), "Select Deadline");
   }
 }

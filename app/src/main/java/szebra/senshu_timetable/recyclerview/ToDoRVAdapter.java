@@ -3,11 +3,13 @@ package szebra.senshu_timetable.recyclerview;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -46,10 +48,43 @@ public class ToDoRVAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
     String detailText = todos.get(position).getDetailText();
   
     holder.titleLabel.setText(title.isEmpty() ? res.getString(R.string.label_no_title) : title);
-    holder.dLineLabel.setText(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(deadline));
+    int deadlineGap = getDeadlineGap(deadline);
+    switch (deadlineGap) {
+      case 0:
+        holder.dLineLabel.setText(res.getString(R.string.label_today));
+        break;
+      case 1:
+        holder.dLineLabel.setText(res.getString(R.string.label_tomorrow));
+        break;
+      default:
+        if (deadlineGap < 10) {
+          holder.dLineLabel.setText(res.getString(R.string.label_in_ndays, deadlineGap));
+        } else {
+          holder.dLineLabel.setText(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(deadline));
+        }
+    }
     holder.lectureLabel.setText(lectureName);
     holder.detailLabel.setText(detailText.isEmpty() ? res.getString(R.string.label_no_text) : detailText);
     realm.close();
+  }
+  
+  /**
+   * 日数の差を取得
+   *
+   * @param date 取得対象のDate
+   * @return 日数
+   */
+  private int getDeadlineGap(Date date) {
+    Calendar todayCal = Calendar.getInstance();
+    todayCal.clear(Calendar.HOUR_OF_DAY);
+    todayCal.clear(Calendar.MINUTE);
+    todayCal.clear(Calendar.SECOND);
+    todayCal.clear(Calendar.MILLISECOND);
+    
+    Date today = todayCal.getTime();
+    Log.d("DateGap", date.toString() + ", " + today.toString());
+    long diffMS = Math.abs(date.getTime() - today.getTime());
+    return (int) (diffMS / 86400000);
   }
   
   @Override

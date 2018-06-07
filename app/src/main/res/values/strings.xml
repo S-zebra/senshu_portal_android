@@ -21,4 +21,7 @@
   <string name="edit_todo_label_detail">Detail</string>
   <string name="label_no_title">(No title)</string>
   <string name="label_no_text">(No description)</string>
+  <string name="label_today">Today</string>
+  <string name="label_tomorrow">Tomorrow</string>
+  <string name="label_in_ndays">%1$d days</string>
 </resources>

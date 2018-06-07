@@ -14,9 +14,17 @@ import szebra.senshu_timetable.activities.ToDoEditActivity;
  * Created by s-zebra on 2018/06/06.
  */
 public class MyDatePicker extends DialogFragment {
+  Calendar cal;
+  
+  public void setCalendar(Calendar cal) {
+    this.cal = cal;
+  }
+  
   @Override
   public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
-    final Calendar cal = Calendar.getInstance();
+    if (cal == null) {
+      cal = Calendar.getInstance();
+    }
     int year = cal.get(Calendar.YEAR);
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DATE);
