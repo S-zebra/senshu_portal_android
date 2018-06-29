@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
   private Realm mRealm;
+  private final boolean forceRefresh = true;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
   
     mRealm = Realm.getDefaultInstance();
-    timetable = (TableLayout) findViewById(R.id.timetable);
-    mProgressBar = (ProgressBar) findViewById(R.id.circularIndicator);
-    mWaitingLabel = (TextView) findViewById(R.id.loadingText);
+    timetable = findViewById(R.id.timetable);
+    mProgressBar = findViewById(R.id.circularIndicator);
+    mWaitingLabel = findViewById(R.id.loadingText);
   
     addtodayRow();
   
     RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
-    if (results.size() == 0) {
+    if (results.size() == 0 || forceRefresh) {
       showProgressBar();
       getTimeTableFromPortal();
     } else {
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
   
   public void setTimetable() {
     for (int period = 0; period < rows.length; period++) {
-      TableRow row = (TableRow) findViewById(rows[period]);
+      TableRow row = findViewById(rows[period]);
       PeriodHoursView phv = new PeriodHoursView(this);
       phv.setPeriod(period);
       row.addView(phv);
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
   }
   
   private void addtodayRow() {
-    TableRow r = (TableRow) findViewById(R.id.row_dow);
+    TableRow r = findViewById(R.id.row_dow);
     r.addView(new TextView(this));
     ClassCell cellToAdjust = new ClassCell(this);
     int cellWidth = cellToAdjust.getWidth();

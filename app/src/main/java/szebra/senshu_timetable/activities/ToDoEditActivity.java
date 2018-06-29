@@ -122,6 +122,7 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
       } else {
         curPos++;
       }
+      Log.d("ToDoEditActivity", "CurPos: " + String.valueOf(curPos));
     }
     Lecture[] lectures = new Lecture[results.size()];
     results.toArray(lectures);

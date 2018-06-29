@@ -1,4 +1,4 @@
-package szebra.senshu_timetable.recyclerview;
+package szebra.senshu_timetable.views.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

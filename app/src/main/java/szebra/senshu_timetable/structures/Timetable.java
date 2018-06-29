@@ -23,7 +23,7 @@ public class Timetable {
   private Timetable(Document doc) {
     realmConnection = Realm.getDefaultInstance();
     realmConnection.beginTransaction();
-    Log.d("時間割アナライザ", "解析を開始しました");
+    Log.d("Analyzer", "Job started.");
     Element table = doc.getElementsByClass("acac").first();
     Elements periods = table.getElementsByTag("tr");
     for (int period = 0; period < 7; period++) {
@@ -37,18 +37,29 @@ public class Timetable {
         //aタグがあれば、そこに授業があると見なす
         if (kougiLink != null) {
           int kougiId = day * 10 + period;
-          String className = currentCell.getElementsByTag("a").first().text().replaceAll("[\\[\\]]", "");
-          String teacherName = currentCell.textNodes().get(3).toString();
-          String classroomName = currentCell.textNodes().get(4).toString().trim();
-//          boolean skip=currentCell
-          Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName);
+          String className = currentCell.getElementsByTag("a").first().text()
+            .replaceAll("[\\[\\]]", "");
+          Elements images = currentCell.getElementsByTag("img"); //変更の画像
+          String teacherName, classroomName, changeInfo;
+          if (images.size() > 0) {
+            Log.d("Analyzer: Image Found", currentCell.textNodes().toString());
+            changeInfo = (images.get(0).attr("title"));
+            teacherName = currentCell.textNodes().get(5).toString();
+            classroomName = currentCell.textNodes().get(6).toString().trim();
+          } else {
+            Log.d("Analyzer: Image NF", currentCell.textNodes().toString());
+            changeInfo = "";
+            teacherName = currentCell.textNodes().get(3).toString();
+            classroomName = currentCell.textNodes().get(4).toString().trim();
+          }
+          Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName, changeInfo);
           realmConnection.copyToRealmOrUpdate(currentLecture);
         }
       }
     }
     realmConnection.commitTransaction();
     realmConnection.close();
-    Log.d("時間割アナライザ", "解析を終了しました");
+    Log.d("Analyzer", "Job complete.");
   }
   
 }

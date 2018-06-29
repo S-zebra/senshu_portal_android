@@ -1,4 +1,4 @@
-package szebra.senshu_timetable.recyclerview;
+package szebra.senshu_timetable.views.recyclerview;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -16,7 +16,7 @@ import io.realm.RealmResults;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.models.ToDo;
-import szebra.senshu_timetable.recyclerview.ToDoRVAdapter;
+import szebra.senshu_timetable.views.recyclerview.ToDoRVAdapter;
 
 public class ToDoListActivity extends AppCompatActivity {
   private RecyclerView recyclerView;
