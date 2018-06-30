@@ -5,7 +5,9 @@ import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -95,5 +97,17 @@ public class ToDoRVAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
   @Override
   public ToDoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new ToDoViewHolder(inflater.inflate(R.layout.to_do_row, parent, false));
+  }
+}
+
+class ToDoViewHolder extends RecyclerView.ViewHolder {
+  public TextView titleLabel, dLineLabel, lectureLabel, detailLabel;
+  
+  public ToDoViewHolder(View itemView) {
+    super(itemView);
+    titleLabel = itemView.findViewById(R.id.taskNameLabel);
+    dLineLabel = itemView.findViewById(R.id.deadlineLabel);
+    lectureLabel = itemView.findViewById(R.id.lectureLabel);
+    detailLabel = itemView.findViewById(R.id.taskDetailLabel);
   }
 }

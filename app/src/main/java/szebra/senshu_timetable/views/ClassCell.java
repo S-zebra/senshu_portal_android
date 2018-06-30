@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 import szebra.senshu_timetable.R;
-import szebra.senshu_timetable.activities.ToDoListActivity;
+import szebra.senshu_timetable.activities.ChangeListActivity;
 import szebra.senshu_timetable.models.ChangeInfo;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.util.ClassHours;
@@ -69,8 +69,8 @@ public class ClassCell extends ConstraintLayout {
     setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(getContext(), ToDoListActivity.class);
-        i.putExtra("Lecture", lectureId);
+        Intent i = new Intent(getContext(), ChangeListActivity.class); //ToDoActivity?知らない子ですねぇ…
+        i.putExtra("Lecture", lecture.getName());
         getContext().startActivity(i);
       }
     });

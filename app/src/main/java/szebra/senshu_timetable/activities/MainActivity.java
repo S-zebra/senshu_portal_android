@@ -15,17 +15,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.nodes.Document;
-
 import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.crawlers.Changes;
+import szebra.senshu_timetable.crawlers.Timetable;
 import szebra.senshu_timetable.models.Credential;
 import szebra.senshu_timetable.models.Lecture;
-import szebra.senshu_timetable.structures.Timetable;
 import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     R.id.row_1st, R.id.row_2nd, R.id.row_3rd,
     R.id.row_4th, R.id.row_5th, R.id.row_6th,
     R.id.row_7th};
-  private String youbi[] = {"月", "火", "水", "木", "金", "土"};
+  private static String youbi[] = {"月", "火", "水", "木", "金", "土"};
   
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
@@ -55,70 +53,53 @@ public class MainActivity extends AppCompatActivity {
     mWaitingLabel = findViewById(R.id.loadingText);
   
     addtodayRow();
-  
+    login();
     RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
     if (results.size() == 0 || forceRefresh) {
       showProgressBar();
-      getTimeTableFromPortal();
-    } else {
-      setTimetable();
+      Timetable.update();
     }
+    setTimetable();
+    Changes.update();
   }
   
-  /**
-   * Connect and fetch timetable from <code>MyPage.php</code>.
-   */
-  public void getTimeTableFromPortal() {
-    //Get timetable
-    Log.d("MainActivity", "getTimeTableFromPortal() fired");
-    new AsyncTask<Void, Integer, Document>() {
+  public void login() {
+    new AsyncTask<Void, Void, Boolean>() {
       PortalCommunicator communicator = PortalCommunicator.getInstance();
-      boolean hasCredential;
       
       @Override
-      protected Document doInBackground(Void... params) {
+      protected Boolean doInBackground(Void... params) {
         Realm realm = Realm.getDefaultInstance();
         try {
           if (!communicator.isLoggedIn()) {
             Log.d("時間割取得", "ログインしていません。");
             RealmResults<Credential> result = realm.where(Credential.class).findAll();
             if (result.size() == 0) {
-              hasCredential = false;
               Log.d("時間割取得", "保存されたアカウント情報はありません。");
               startActivity(new Intent(MainActivity.this, LoginActivity.class));
               finish();
               this.cancel(true);
             } else {
               Log.d("時間割取得", "アカウント情報が見つかりました。ログインします。");
-              if (communicator.logIn(result.first())) {
-                Log.d("時間割取得", "ログイン処理完了。");
-              } else {
-                return null;
-              }
+              return communicator.logIn(result.first());
             }
           }
           realm.close();
-          return communicator.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.MY_PAGE_URL, null);
         } catch (IOException e) {
           this.cancel(true);
-          return null;
         }
+        return false;
       }
       
       @Override
       protected void onCancelled() {
-        if (hasCredential) {
-          Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
       }
       
       @Override
-      protected void onPostExecute(Document document) {
-        if (document != null) {
-          Timetable.parseFrom(document);
-          setTimetable();
-        } else {
-          Toast.makeText(MainActivity.this, "通信に失敗しました。ログイン情報が変更された可能性があります", Toast.LENGTH_LONG).show();
+      protected void onPostExecute(Boolean success) {
+        if (!success) {
+          Toast.makeText(MainActivity.this, "ログインに失敗しました。アカウント情報が変更された可能性があります", Toast.LENGTH_LONG).show();
         }
       }
     }.execute();

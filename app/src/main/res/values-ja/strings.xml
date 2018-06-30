@@ -20,4 +20,7 @@
   <string name="label_today">今日</string>
   <string name="label_tomorrow">明日</string>
   <string name="label_in_ndays">%1$d日後</string>
+  <string name="label_nochange">%1$s に変更はありません。</string>
+  <string name="label_header_date">日付:</string>
+  <string name="label_header_after_chg_info">変更後情報:</string>
 </resources>
