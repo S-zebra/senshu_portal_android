@@ -4,15 +4,15 @@ import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import szebra.senshu_timetable.ChangeType;
 
 /**
  * Created by s-zebra on 2018/06/26.
  */
 public class ChangeInfo extends RealmObject {
-  public static final String KYUKO = "休講";
-  public static final String CHANGE = "各種変更";
   @PrimaryKey
   public int id;
+  public String type;
   public String lectureName;
   public Date date;
   public String afterChangeInfo;
@@ -21,10 +21,11 @@ public class ChangeInfo extends RealmObject {
   
   }
   
-  public ChangeInfo(int id, String lectureName, Date date, String changeInfo) {
+  public ChangeInfo(int id, String type, String lectureName, Date date, String changeInfo) {
     this.id = id;
     this.lectureName = lectureName;
     this.date = date;
+    this.type = type;
     this.afterChangeInfo = changeInfo;
   }
   
@@ -42,5 +43,13 @@ public class ChangeInfo extends RealmObject {
   
   public String getLectureName() {
     return lectureName;
+  }
+  
+  public ChangeType getType() {
+    return ChangeType.valueOf(this.type);
+  }
+  
+  public void setType(String changeType) {
+    this.type = changeType;
   }
 }

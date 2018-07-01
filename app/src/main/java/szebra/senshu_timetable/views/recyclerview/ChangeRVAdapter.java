@@ -19,24 +19,26 @@ import szebra.senshu_timetable.models.ChangeInfo;
 public class ChangeRVAdapter extends RecyclerView.Adapter<ChangeViewHolder> {
   private LayoutInflater inflater;
   private List<ChangeInfo> changeList;
+  private Context context;
   
   @Override
   public void onBindViewHolder(ChangeViewHolder holder, int position) {
   
   }
   
-  //TODO: リストここに渡す
   public ChangeRVAdapter(Context context, List<ChangeInfo> results) {
     inflater = LayoutInflater.from(context);
     this.changeList = results;
+    this.context = context;
   }
   
   @Override
   public void onBindViewHolder(ChangeViewHolder holder, int position, List<Object> payloads) {
     super.onBindViewHolder(holder, position, payloads);
-    holder.changeTextLabel.setText(changeList.get(position).afterChangeInfo);
+    ChangeInfo item = changeList.get(position);
+    holder.changeTextLabel.setText(item.getAfterChangeInfo());
     DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    holder.changeDateLabel.setText(dateFormat.format(changeList.get(position).date));
+    holder.changeDateLabel.setText(context.getString(R.string.separate_colon, item.getType().getTranslatedName(), dateFormat.format(item.getDate())));
   }
   
   @Override

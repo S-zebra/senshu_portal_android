@@ -55,22 +55,22 @@ public final class Timetable {
             //aタグがあれば、そこに授業があると見なす
             if (kougiLink != null) {
               int kougiId = day * 10 + period;
-              String className = currentCell.getElementsByTag("a").first().text()
-                .replaceAll("[\\[\\]]", "");
               Elements images = currentCell.getElementsByTag("img"); //変更の画像
-              String teacherName, classroomName, changeInfo;
+              String className, teacherName, classroomName, changeTypeName = "";
               if (images.size() > 0) {
                 Log.d("Analyzer: Image Found", currentCell.textNodes().toString());
-                changeInfo = (images.get(0).attr("title"));
+                changeTypeName = images.get(0).attr("title");
                 teacherName = currentCell.textNodes().get(5).toString();
                 classroomName = currentCell.textNodes().get(6).toString().trim();
+                className = currentCell.getElementsByTag("a").get(1).text().replaceAll("[\\[\\]]", "");
               } else {
                 Log.d("Analyzer: Image NF", currentCell.textNodes().toString());
-                changeInfo = "";
                 teacherName = currentCell.textNodes().get(3).toString();
                 classroomName = currentCell.textNodes().get(4).toString().trim();
+                className = currentCell.getElementsByTag("a").get(0).text().replaceAll("[\\[\\]]", "");
               }
-              Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName, changeInfo);
+              Log.d("Analyzer", "className: " + className);
+              Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName, changeTypeName);
               realmConnection.copyToRealmOrUpdate(currentLecture);
             }
           }

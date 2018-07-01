@@ -33,6 +33,7 @@
     android:layout_marginRight="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
+    android:gravity="center"
     android:text="@string/label_nochange"
     android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
     android:visibility="invisible"
@@ -40,30 +41,14 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
 
-  <android.support.v4.widget.NestedScrollView
-    android:layout_width="match_parent"
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/changeList"
+    android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginStart="8dp"
-    android:fillViewport="true"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/noChangeLabel">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <android.support.v7.widget.RecyclerView
-        android:id="@+id/changeList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
+    app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+    app:layout_constraintVertical_bias="0.0"/>
 
 </android.support.constraint.ConstraintLayout>

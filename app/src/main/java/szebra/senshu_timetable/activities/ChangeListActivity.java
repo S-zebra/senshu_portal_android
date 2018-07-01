@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,8 +33,6 @@ public class ChangeListActivity extends AppCompatActivity {
     String lectureName = getIntent().getStringExtra("Lecture");
     Log.d("ChangeListActivity", "Passed: " + lectureName);
     
-    setTitle(lectureName);
-    
     noChangeLabel = findViewById(R.id.noChangeLabel);
     
     changeList = findViewById(R.id.changeList);
@@ -49,7 +48,18 @@ public class ChangeListActivity extends AppCompatActivity {
       changeList.setAdapter(new ChangeRVAdapter(this, result));
     } else {
       noChangeLabel.setVisibility(View.VISIBLE);
+      noChangeLabel.setText(getResources().getString(R.string.label_nochange, lectureName));
     }
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        break;
+    }
+    return super.onOptionsItemSelected(item);
   }
   
 }

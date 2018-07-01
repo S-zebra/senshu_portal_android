@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +13,6 @@ import java.util.Date;
 
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.activities.ChangeListActivity;
-import szebra.senshu_timetable.models.ChangeInfo;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.util.ClassHours;
 
@@ -71,17 +71,17 @@ public class ClassCell extends ConstraintLayout {
       public void onClick(View v) {
         Intent i = new Intent(getContext(), ChangeListActivity.class); //ToDoActivity?知らない子ですねぇ…
         i.putExtra("Lecture", lecture.getName());
+        Log.d("Intent (Lecture)", lecture.getName());
         getContext().startActivity(i);
       }
     });
     highlight();
-    String changeInfo = lecture.getChangeInfo();
-    if (changeInfo == null) {
-      return;
-    }
-    if (changeInfo.equals(ChangeInfo.CHANGE)) {
+    Log.d("ClassCell", lecture.getChangeTypeName());
+  
+    String typeName = lecture.getChangeTypeName();
+    if (typeName.equals("各種変更")) {
       changeIcon.setVisibility(VISIBLE);
-    } else if (changeInfo.equals(ChangeInfo.KYUKO)) {
+    } else if (typeName.equals("休講")) {
       this.setBackgroundColor(getResources().getColor(R.color.cellBackground));
       changeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_block_black_24dp));
       changeIcon.setVisibility(VISIBLE);

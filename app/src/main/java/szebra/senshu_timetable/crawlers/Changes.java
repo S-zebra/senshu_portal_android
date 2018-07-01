@@ -16,6 +16,7 @@ import java.util.Iterator;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import szebra.senshu_timetable.ChangeType;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.ChangeInfo;
 import szebra.senshu_timetable.util.PortalCommunicator;
@@ -29,7 +30,14 @@ public final class Changes {
   
   }
   
+  
   public static void update() {
+    final Realm realm = Realm.getDefaultInstance();
+    realm.beginTransaction();
+    realm.delete(ChangeInfo.class);
+    realm.commitTransaction();
+    
+    
     new AsyncTask<Void, Void, Document>() {
       
       @Override
@@ -45,7 +53,11 @@ public final class Changes {
       
       @Override
       protected void onPostExecute(Document document) {
-        Changes.parse(document);
+        if (document != null) {
+          Changes.parse(document, realm, ChangeType.休講);
+          Changes.parse(document, realm, ChangeType.各種変更);
+        }
+        realm.close();
       }
       
       @Override
@@ -55,28 +67,25 @@ public final class Changes {
     }.execute();
   }
   
-  private static void parse(Document doc) {
-    if (doc == null) {
-      Log.e("ChangeParser", "Error while retrieving the document.");
+  private static void parse(Document doc, Realm realm, ChangeType type) {
+    Element table = doc.getElementById(type.getTableID());
+    if (table == null) {
       return;
     }
-    Elements rows = doc.getElementById("table_kubun_rinji").getElementsByClass("tr_y2");
-    Realm realm = Realm.getDefaultInstance();
+    Elements rows = table.getElementsByAttributeValueStarting("class", "tr_y");
+    
     RealmResults<ChangeInfo> results = realm.where(ChangeInfo.class).findAllSorted("id", Sort.DESCENDING);
     int lastIndex = 0;
     if (results.size() > 0) {
       lastIndex = results.first().id;
     }
-    Log.d("Changes", "Parsing");
+    Log.d("Change/Kyuko Parser", "Parsing");
     for (Element row : rows) {
+  
       //日付
       //Ex. 2018年06月26日 (火曜) 3限
       String dateString = row.getElementsByTag("td").get(1).child(0).text().split(" ")[0];
-      String[] dateParts = dateString.split("[年月日]");
-      Calendar cal = Calendar.getInstance();
-      cal.clear();
-      cal.set(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
-      Date date = cal.getTime();
+      Date date = formatDate(dateString);
       
       //内容
       Iterator<TextNode> iterator = row.getElementsByTag("td").get(5).child(0).textNodes().iterator();
@@ -87,13 +96,21 @@ public final class Changes {
       }
       String lectureName = row.getElementsByTag("td").get(3).child(0).text().replaceAll("【.+】", "").trim();
       Log.d("ChangeListActivity", "Original: " + lectureName);
-      
-      ChangeInfo newInfo = new ChangeInfo(++lastIndex, lectureName, date, builder.toString());
+      String changeText = builder.toString();
+      ChangeInfo newInfo = new ChangeInfo(++lastIndex, type.name(), lectureName, date, changeText.substring(0, changeText.length() - 1));
       realm.beginTransaction();
       realm.copyToRealmOrUpdate(newInfo);
       realm.commitTransaction();
     }
-    realm.close();
-    Log.d("Changes", "Parse finish");
+    
+    Log.d("Change/Kyuko Parser", "Parse finish");
+  }
+  
+  private static Date formatDate(String dateString) {
+    String[] dateParts = dateString.split("[年月日]");
+    Calendar cal = Calendar.getInstance();
+    cal.clear();
+    cal.set(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]) - 1, Integer.parseInt(dateParts[2]));
+    return cal.getTime();
   }
 }

@@ -24,8 +24,9 @@
   <string name="label_today">Today</string>
   <string name="label_tomorrow">Tomorrow</string>
   <string name="label_in_ndays">%1$d days</string>
-  <string name="title_activity_change_activity">change_activity</string>
+  <string name="title_activity_change_activity">Change Info</string>
   <string name="label_nochange">No changes for %1$s.</string>
-  <string name="label_header_date">Date:</string>
-  <string name="label_header_after_chg_info">After Change:</string>
+  <string name="kyuko">No lecture</string>
+  <string name="change">Change</string>
+  <string name="separate_colon" translatable="false">%1$s: %2$s</string>
 </resources>
