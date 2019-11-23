@@ -62,12 +62,12 @@ public final class Timetable {
                 changeTypeName = images.get(0).attr("title");
                 teacherName = currentCell.textNodes().get(5).toString();
                 classroomName = currentCell.textNodes().get(6).toString().trim();
-                className = currentCell.getElementsByTag("a").get(1).text().replaceAll("[\\[\\]]", "");
+                className = currentCell.getElementsByTag("a").last().text().replaceAll("[\\[\\]]", "");
               } else {
                 Log.d("Analyzer: Image NF", currentCell.textNodes().toString());
                 teacherName = currentCell.textNodes().get(3).toString();
                 classroomName = currentCell.textNodes().get(4).toString().trim();
-                className = currentCell.getElementsByTag("a").get(0).text().replaceAll("[\\[\\]]", "");
+                className = currentCell.getElementsByTag("a").first().text().replaceAll("[\\[\\]]", "");
               }
               Log.d("Analyzer", "className: " + className);
               Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName, changeTypeName);

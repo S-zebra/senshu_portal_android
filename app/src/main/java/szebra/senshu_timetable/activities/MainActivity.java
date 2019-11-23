@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import szebra.senshu_timetable.R;
-import szebra.senshu_timetable.crawlers.Changes;
 import szebra.senshu_timetable.crawlers.Timetable;
 import szebra.senshu_timetable.models.Credential;
 import szebra.senshu_timetable.models.Lecture;
@@ -31,22 +31,25 @@ import szebra.senshu_timetable.views.PeriodHoursView;
 public class MainActivity extends AppCompatActivity {
   private TableLayout timetable;
   
-  private int rows[] = {
+  private int[] rows = {
     R.id.row_1st, R.id.row_2nd, R.id.row_3rd,
     R.id.row_4th, R.id.row_5th, R.id.row_6th,
     R.id.row_7th};
-  private static String youbi[] = {"月", "火", "水", "木", "金", "土"};
+  private static String[] youbi = {"月", "火", "水", "木", "金", "土"};
   
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
   private Realm mRealm;
   private final boolean forceRefresh = true;
+  private boolean readyToUpdate = false;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-  
+    Toolbar toolbar = findViewById(R.id.main_toolbar);
+    setSupportActionBar(toolbar);
+    
     mRealm = Realm.getDefaultInstance();
     timetable = findViewById(R.id.timetable);
     mProgressBar = findViewById(R.id.circularIndicator);
@@ -54,13 +57,15 @@ public class MainActivity extends AppCompatActivity {
   
     addtodayRow();
     login();
-    RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
-    if (results.size() == 0 || forceRefresh) {
-      showProgressBar();
-      Timetable.update();
-    }
-    setTimetable();
-    Changes.update();
+
+
+//    Intent updateService = new Intent(this, AutoUpdater.class);
+//    PendingIntent pIntent = PendingIntent.getService(this, -1, updateService, PendingIntent.FLAG_UPDATE_CURRENT);
+//    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//    alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, pIntent);
+//    Toast.makeText(this, "自動更新が有効になりました。", Toast.LENGTH_SHORT).show();
+//    startService(updateService);
+//    Toast.makeText(this, "更新サービスを実行しています。", Toast.LENGTH_SHORT).show();
   }
   
   public void login() {
@@ -84,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
               return communicator.logIn(result.first());
             }
           }
-          realm.close();
         } catch (IOException e) {
           this.cancel(true);
         }
+        realm.close();
         return false;
       }
       
@@ -100,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
       protected void onPostExecute(Boolean success) {
         if (!success) {
           Toast.makeText(MainActivity.this, "ログインに失敗しました。アカウント情報が変更された可能性があります", Toast.LENGTH_LONG).show();
+        } else {
+          RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
+          if (results.size() == 0 || forceRefresh) {
+            showProgressBar();
+            Timetable.update();
+          }
+          setTimetable();
         }
       }
     }.execute();

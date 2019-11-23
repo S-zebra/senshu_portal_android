@@ -26,17 +26,25 @@ import szebra.senshu_timetable.util.PortalCommunicator;
  */
 
 public final class Changes {
+  /**
+   * Changes cannot be instantiated (a.k.a. Static class).
+   */
   private Changes() {
   
   }
   
-  
+  /**
+   * Updates the changes information and stores into realm DB.<br>
+   * <b>NOTE:</b> <code>Credential</code> must has a valid record.
+   *
+   * @throws IllegalStateException Not logged in, or received page is invalid
+   */
   public static void update() {
-    final Realm realm = Realm.getDefaultInstance();
+    Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realm.delete(ChangeInfo.class);
     realm.commitTransaction();
-    
+    realm.close();
     
     new AsyncTask<Void, Void, Document>() {
       
@@ -54,10 +62,9 @@ public final class Changes {
       @Override
       protected void onPostExecute(Document document) {
         if (document != null) {
-          Changes.parse(document, realm, ChangeType.休講);
-          Changes.parse(document, realm, ChangeType.各種変更);
+          Changes.parse(document, ChangeType.休講);
+          Changes.parse(document, ChangeType.各種変更);
         }
-        realm.close();
       }
       
       @Override
@@ -67,7 +74,8 @@ public final class Changes {
     }.execute();
   }
   
-  private static void parse(Document doc, Realm realm, ChangeType type) {
+  private static void parse(Document doc, ChangeType type) {
+    Realm realm = Realm.getDefaultInstance();
     Element table = doc.getElementById(type.getTableID());
     if (table == null) {
       return;
@@ -102,8 +110,8 @@ public final class Changes {
       realm.copyToRealmOrUpdate(newInfo);
       realm.commitTransaction();
     }
-    
     Log.d("Change/Kyuko Parser", "Parse finish");
+    realm.close();
   }
   
   private static Date formatDate(String dateString) {
