@@ -8,4 +8,6 @@ public final class PortalURL {
   public static final String MY_PAGE_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/MyPage.php";
   public static final String LOGIN_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/Login.php";
   public static final String CHANGES_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/Kyuko.php";
+  public static final String TIMETABLE_LATTER_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/Jikanwari.php?mode=latter";
+  public static final String TIMETABLE_FIRST_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/Jikanwari.php?mode=first";
 }
