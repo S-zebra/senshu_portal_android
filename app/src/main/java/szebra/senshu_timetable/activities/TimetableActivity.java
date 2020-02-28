@@ -25,7 +25,7 @@ import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
 
-public class MainActivity extends AppCompatActivity implements TaskCallback {
+public class TimetableActivity extends AppCompatActivity implements TaskCallback {
   private TableLayout timetable;
   
   private int[] rows = {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements TaskCallback {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_timetable);
     Toolbar toolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(toolbar);
     
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements TaskCallback {
         row.addView(cell);
       }
     }
-      hideProgressBar();
+    hideProgressBar();
     realm.close();
   }
   

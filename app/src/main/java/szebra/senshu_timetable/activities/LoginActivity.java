@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements TaskCallback {
     realm.copyToRealmOrUpdate(credential);
     realm.commitTransaction();
     realm.close();
-    startActivity(new Intent(this, MainActivity.class));
+    startActivity(new Intent(this, TimetableActivity.class));
     finish();
   }
   
