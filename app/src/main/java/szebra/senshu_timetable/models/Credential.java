@@ -9,12 +9,10 @@ import io.realm.annotations.PrimaryKey;
 
 public class Credential extends RealmObject {
   @PrimaryKey
-  private int id; //Because app never has multiple accounts
   private String userName;
   private String password;
   
-  public Credential(int id, String userName, String password) {
-    this.id = id;
+  public Credential(String userName, String password) {
     this.userName = userName;
     this.password = password;
   }

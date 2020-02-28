@@ -1,4 +1,4 @@
-package szebra.senshu_timetable.crawlers;
+package szebra.senshu_timetable.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,63 +19,52 @@ import io.realm.Sort;
 import szebra.senshu_timetable.ChangeType;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.ChangeInfo;
+import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.util.PortalCommunicator;
 
 /**
  * Created by s-zebra on 2018/06/30.
  */
 
-public final class Changes {
-  /**
-   * Changes cannot be instantiated (a.k.a. Static class).
-   */
-  private Changes() {
+public final class UpdateChangesTask extends AsyncTask<Void, Void, Throwable> {
+  private Realm realm;
+  private WeakReference<TaskCallback> reference;
   
+  public void setCallback(TaskCallback callback) {
+    this.reference = new WeakReference<>(callback);
   }
   
-  /**
-   * Updates the changes information and stores into realm DB.<br>
-   * <b>NOTE:</b> <code>Credential</code> must has a valid record.
-   *
-   * @throws IllegalStateException Not logged in, or received page is invalid
-   */
-  public static void update() {
-    Realm realm = Realm.getDefaultInstance();
+  @Override
+  protected void onPostExecute(Throwable throwable) {
+    if (reference.get() == null) return;
+    reference.get().onTaskCompleted(throwable);
+  }
+  
+  @Override
+  protected Throwable doInBackground(Void... voids) {
+    realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     realm.delete(ChangeInfo.class);
-    realm.commitTransaction();
-    realm.close();
-    
-    new AsyncTask<Void, Void, Document>() {
-      
-      @Override
-      protected Document doInBackground(Void... voids) {
-        PortalCommunicator communicator = PortalCommunicator.getInstance();
-        try {
-          return communicator.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.CHANGES_URL, null);
-        } catch (IOException e) {
-          cancel(true);
-          return null;
-        }
-      }
-      
-      @Override
-      protected void onPostExecute(Document document) {
-        if (document != null) {
-          Changes.parse(document, ChangeType.休講);
-          Changes.parse(document, ChangeType.各種変更);
-        }
-      }
-      
-      @Override
-      protected void onCancelled() {
-        Log.e("getChangeInfoFromPortal", "Error");
-      }
-    }.execute();
+    PortalCommunicator comm = PortalCommunicator.getInstance();
+    try {
+      comm.refreshSession();
+      Document document = comm.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.CHANGES_URL, null);
+      parse(document, ChangeType.休講);
+      parse(document, ChangeType.各種変更);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return e;
+    } finally {
+      realm.commitTransaction();
+      realm.close();
+    }
+    return null;
   }
   
-  private static void parse(Document doc, ChangeType type) {
-    Realm realm = Realm.getDefaultInstance();
+  private void parse(Document doc, ChangeType type) {
+    if (doc == null) {
+      return;
+    }
     Element table = doc.getElementById(type.getTableID());
     if (table == null) {
       return;
@@ -89,7 +78,6 @@ public final class Changes {
     }
     Log.d("Change/Kyuko Parser", "Parsing");
     for (Element row : rows) {
-  
       //日付
       //Ex. 2018年06月26日 (火曜) 3限
       String dateString = row.getElementsByTag("td").get(1).child(0).text().split(" ")[0];
@@ -106,12 +94,9 @@ public final class Changes {
       Log.d("ChangeListActivity", "Original: " + lectureName);
       String changeText = builder.toString();
       ChangeInfo newInfo = new ChangeInfo(++lastIndex, type.name(), lectureName, date, changeText.substring(0, changeText.length() - 1));
-      realm.beginTransaction();
       realm.copyToRealmOrUpdate(newInfo);
-      realm.commitTransaction();
     }
     Log.d("Change/Kyuko Parser", "Parse finish");
-    realm.close();
   }
   
   private static Date formatDate(String dateString) {

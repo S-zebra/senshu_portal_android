@@ -9,17 +9,20 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.models.ChangeInfo;
+import szebra.senshu_timetable.tasks.UpdateChangesTask;
+import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.views.recyclerview.ChangeRVAdapter;
 
-public class ChangeListActivity extends AppCompatActivity {
-  private Realm realm;
+public class ChangeListActivity extends AppCompatActivity implements TaskCallback {
   private RecyclerView changeList;
   private TextView noChangeLabel;
+  private String lectureName;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +32,22 @@ public class ChangeListActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
-    
-    String lectureName = getIntent().getStringExtra("Lecture");
+  
+    lectureName = getIntent().getStringExtra("Lecture");
     Log.d("ChangeListActivity", "Passed: " + lectureName);
     
     noChangeLabel = findViewById(R.id.noChangeLabel);
     
     changeList = findViewById(R.id.changeList);
     changeList.setLayoutManager(new LinearLayoutManager(this));
-    
-    realm = Realm.getDefaultInstance();
+  
+    UpdateChangesTask changesTask = new UpdateChangesTask();
+    changesTask.setCallback(this);
+    changesTask.execute();
+  }
+  
+  private void updateDisplay() {
+    Realm realm = Realm.getDefaultInstance();
     
     RealmResults<ChangeInfo> allResults = realm.where(ChangeInfo.class).findAll();
     Log.d("ChangeListActivity", String.valueOf(allResults.size()));
@@ -60,6 +69,15 @@ public class ChangeListActivity extends AppCompatActivity {
         break;
     }
     return super.onOptionsItemSelected(item);
+  }
+  
+  @Override
+  public void onTaskCompleted(Throwable exception) {
+    if (exception != null) {
+      Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+      return;
+    }
+    updateDisplay();
   }
   
 }

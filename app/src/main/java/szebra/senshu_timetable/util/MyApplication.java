@@ -4,9 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
 
-import java.io.IOException;
 import java.security.Key;
 
 import io.realm.Realm;
@@ -49,13 +47,13 @@ public class MyApplication extends Application {
   @Override
   public void onTerminate() {
     super.onTerminate();
-    PortalCommunicator communicator = PortalCommunicator.getInstance();
-    if (communicator.isLoggedIn()) {
-      try {
-        communicator.logOut();
-      } catch (IOException ex) {
-        Log.e("MyApplication", "Failed to logOut.");
-      }
-    }
+//    PortalCommunicator communicator = PortalCommunicator.getInstance();
+//    if (communicator.isLoggedIn()) {
+//      try {
+//        communicator.logOut();
+//      } catch (IOException ex) {
+//        Log.e("MyApplication", "Failed to logOut.");
+//      }
+//    }
   }
 }

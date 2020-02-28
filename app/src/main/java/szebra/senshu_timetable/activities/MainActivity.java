@@ -1,11 +1,9 @@
 package szebra.senshu_timetable.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -16,19 +14,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 import szebra.senshu_timetable.R;
-import szebra.senshu_timetable.crawlers.Timetable;
 import szebra.senshu_timetable.models.Credential;
 import szebra.senshu_timetable.models.Lecture;
+import szebra.senshu_timetable.tasks.UpdateTimetableTask;
+import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskCallback {
   private TableLayout timetable;
   
   private int[] rows = {
@@ -39,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
   
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
-  private Realm mRealm;
   private final boolean forceRefresh = true;
   private boolean readyToUpdate = false;
   
@@ -50,71 +46,37 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar = findViewById(R.id.main_toolbar);
     setSupportActionBar(toolbar);
     
-    mRealm = Realm.getDefaultInstance();
     timetable = findViewById(R.id.timetable);
     mProgressBar = findViewById(R.id.circularIndicator);
     mWaitingLabel = findViewById(R.id.loadingText);
   
     addtodayRow();
-    login();
-
-
-//    Intent updateService = new Intent(this, AutoUpdater.class);
-//    PendingIntent pIntent = PendingIntent.getService(this, -1, updateService, PendingIntent.FLAG_UPDATE_CURRENT);
-//    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//    alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, pIntent);
-//    Toast.makeText(this, "自動更新が有効になりました。", Toast.LENGTH_SHORT).show();
-//    startService(updateService);
-//    Toast.makeText(this, "更新サービスを実行しています。", Toast.LENGTH_SHORT).show();
+    if (initCredential()) {
+      UpdateTimetableTask task = new UpdateTimetableTask();
+      task.setCallback(this);
+      task.execute();
+    } else {
+      startActivity(new Intent(this, LoginActivity.class));
+    }
   }
   
-  public void login() {
-    new AsyncTask<Void, Void, Boolean>() {
-      PortalCommunicator communicator = PortalCommunicator.getInstance();
-      
-      @Override
-      protected Boolean doInBackground(Void... params) {
-        Realm realm = Realm.getDefaultInstance();
-        try {
-          if (!communicator.isLoggedIn()) {
-            Log.d("時間割取得", "ログインしていません。");
-            RealmResults<Credential> result = realm.where(Credential.class).findAll();
-            if (result.size() == 0) {
-              Log.d("時間割取得", "保存されたアカウント情報はありません。");
-              startActivity(new Intent(MainActivity.this, LoginActivity.class));
-              finish();
-              this.cancel(true);
-            } else {
-              Log.d("時間割取得", "アカウント情報が見つかりました。ログインします。");
-              return communicator.logIn(result.first());
-            }
-          }
-        } catch (IOException e) {
-          this.cancel(true);
-        }
-        realm.close();
-        return false;
-      }
-      
-      @Override
-      protected void onCancelled() {
-        Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
-      }
-      
-      @Override
-      protected void onPostExecute(Boolean success) {
-        if (!success) {
-          Toast.makeText(MainActivity.this, "ログインに失敗しました。アカウント情報が変更された可能性があります", Toast.LENGTH_LONG).show();
-        } else {
-          RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll();
-          if (results.size() == 0 || forceRefresh) {
-            showProgressBar();
-            Timetable.update();
-          }
-          setTimetable();
-        }
-      }
-    }.execute();
+  public boolean initCredential() {
+    Realm realm = Realm.getDefaultInstance();
+    RealmResults<Credential> credentials = realm.where(Credential.class).findAll();
+    if (credentials.isEmpty()) return false;
+    Credential firstItem = credentials.first();
+    Credential newCredential = new Credential(firstItem.getUserName(), firstItem.getPassword());
+    PortalCommunicator.getInstance().setCredential(newCredential);
+    return true;
+  }
+  
+  @Override
+  public void onTaskCompleted(Throwable exception) {
+    if (exception != null) {
+      Toast.makeText(this, exception.getClass().getSimpleName() + ":" + exception.getMessage(), Toast.LENGTH_SHORT).show();
+      return;
+    }
+    setTimetable();
   }
   
   public void showProgressBar() {
@@ -146,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
   }
   
   public void setTimetable() {
+    Realm realm = Realm.getDefaultInstance();
     for (int period = 0; period < rows.length; period++) {
       TableRow row = findViewById(rows[period]);
       PeriodHoursView phv = new PeriodHoursView(this);
@@ -153,13 +116,14 @@ public class MainActivity extends AppCompatActivity {
       row.addView(phv);
       for (int day = 0; day < youbi.length; day++) {
         ClassCell cell = new ClassCell(this);
-        cell.setLecture(mRealm.where(Lecture.class).equalTo("day", day).equalTo("period", period).findFirst());
+        cell.setLecture(realm.where(Lecture.class).equalTo("day", day).equalTo("period", period).findFirst());
         row.addView(cell);
       }
-      if (mProgressBar.getVisibility() != View.GONE) {
-        hideProgressBar();
-      }
     }
+    if (mProgressBar.getVisibility() != View.GONE) {
+      hideProgressBar();
+    }
+    realm.close();
   }
   
   private void addtodayRow() {
@@ -176,9 +140,4 @@ public class MainActivity extends AppCompatActivity {
     }
   }
   
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    mRealm.close();
-  }
 }
