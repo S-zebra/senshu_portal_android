@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements TaskCallback {
     loginButton = findViewById(R.id.loginbutton);
     usernameBox = findViewById(R.id.studentid);
     passwordBox = findViewById(R.id.password);
-    progressBar = findViewById(R.id.progressBar);
+    progressBar = findViewById(R.id.chgLoadingCircle);
     waitingLabel = findViewById(R.id.waitingLabel);
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements TaskCallback {
   
     addtodayRow();
     if (initCredential()) {
+      showProgressBar();
       UpdateTimetableTask task = new UpdateTimetableTask();
       task.setCallback(this);
       task.execute();
@@ -120,9 +121,7 @@ public class MainActivity extends AppCompatActivity implements TaskCallback {
         row.addView(cell);
       }
     }
-    if (mProgressBar.getVisibility() != View.GONE) {
       hideProgressBar();
-    }
     realm.close();
   }
   

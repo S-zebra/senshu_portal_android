@@ -47,6 +47,8 @@ public class ChangeListActivity extends AppCompatActivity implements TaskCallbac
   }
   
   private void updateDisplay() {
+    findViewById(R.id.chgLoadingCircle).setVisibility(View.GONE);
+    findViewById(R.id.chgLoadingLabel).setVisibility(View.GONE);
     Realm realm = Realm.getDefaultInstance();
     
     RealmResults<ChangeInfo> allResults = realm.where(ChangeInfo.class).findAll();
