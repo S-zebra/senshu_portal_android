@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <TextView
+    android:id="@+id/news_item_sender"
+    android:layout_width="0dp"
+    android:layout_height="21dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:ellipsize="end"
+    android:lines="1"
+    android:textColor="@android:color/primary_text_light"
+    app:layout_constraintEnd_toStartOf="@+id/news_item_date"
+    app:layout_constraintStart_toEndOf="@+id/news_item_ic_new"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="tthththth" />
+
+  <CheckBox
+    android:id="@+id/news_item_checkbox"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/news_item_body_prev"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="4dp"
+    android:maxLines="2"
+    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+    android:textColor="@android:color/primary_text_light"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/news_item_ic_attach"
+    app:layout_constraintStart_toEndOf="@+id/news_item_checkbox"
+    app:layout_constraintTop_toBottomOf="@+id/news_item_subject"
+    tools:text="本文のプレビュー本文のプレビュー本文のプレビュー本文のプレビュー本文のプレビュー本文のプレビュー" />
+
+  <TextView
+    android:id="@+id/news_item_date"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:textColor="@android:color/secondary_text_light"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="12月31日" />
+
+  <ImageView
+    android:id="@+id/news_item_ic_imp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@+id/news_item_checkbox"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_priority_high_black_24dp" />
+
+  <ImageView
+    android:id="@+id/news_item_ic_new"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@+id/news_item_ic_chkopen"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
+
+  <ImageView
+    android:id="@+id/news_item_ic_chkopen"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@+id/news_item_ic_imp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_record_voice_over_black_24dp" />
+
+  <ImageView
+    android:id="@+id/news_item_ic_attach"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="4dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:srcCompat="@drawable/ic_attachment_black_24dp" />
+
+  <TextView
+    android:id="@+id/news_item_subject"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:ellipsize="end"
+    android:singleLine="true"
+    android:textColor="@android:color/primary_text_light"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toEndOf="@+id/news_item_checkbox"
+    app:layout_constraintTop_toBottomOf="@+id/news_item_sender"
+    tools:text="新型コロナウイルス感染症拡大に伴うイベント等の対応について" />
+</android.support.constraint.ConstraintLayout>

@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     drawerToggle.syncState();
   
     fragmentsMap = new HashMap<>();
-    switchFragment(R.id.drawer_item_timetable);
+    onOptionsItemSelected((MenuItem) findViewById(R.id.drawer_item_timetable));
   }
   
   @Override
@@ -77,16 +76,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
           newFragment = new TimetableFragment();
           fragmentsMap.put(menuItemId, newFragment);
           break;
-        default:
-          Toast.makeText(this, "Not Implemented", Toast.LENGTH_SHORT).show();
-          drawer.closeDrawers();
-          return;
+        case R.id.drawer_item_news:
+          newFragment = new NewsPagerFragment();
+          fragmentsMap.put(menuItemId, newFragment);
+          break;
       }
     }
+    drawer.closeDrawers();
     getSupportFragmentManager()
       .beginTransaction()
       .replace(R.id.frame_main, newFragment)
-      .commit();
+      .commitAllowingStateLoss();
     drawer.closeDrawers();
   }
 }
