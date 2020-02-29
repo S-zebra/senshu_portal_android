@@ -43,7 +43,7 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timetable);
-    Toolbar toolbar = findViewById(R.id.main_toolbar);
+    Toolbar toolbar = findViewById(R.id.mainToolbar);
     setSupportActionBar(toolbar);
     
     timetable = findViewById(R.id.timetable);

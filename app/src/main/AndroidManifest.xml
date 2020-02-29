@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="szebra.senshu_timetable">
-
+  package="szebra.senshu_timetable">
   <!-- <uses-sdk tools:overrideLibrary="android.support.design" /> -->
   <!-- To auto-complete the email text field in the login form with the user's emails -->
-  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.INTERNET" />
 
   <application
     android:name=".util.MyApplication"
@@ -14,28 +13,26 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-    <activity android:name=".activities.TimetableActivity">
+    <activity android:name=".activities.MainActivity">
       <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
-        <category android:name="android.intent.category.LAUNCHER"/>
+        <action android:name="android.intent.action.MAIN" />
+
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity android:name=".activities.TimetableActivity"></activity>
     <activity
       android:name=".activities.LoginActivity"
-      android:label="@string/title_activity_login">
-    </activity>
+      android:label="@string/title_activity_login"></activity>
     <activity
       android:name=".activities.ToDoListActivity"
       android:label="@string/title_activity_to_do_list"
-      android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-    </activity>
-    <activity android:name=".activities.ToDoEditActivity">
-    </activity>
+      android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+    <activity android:name=".activities.ToDoEditActivity"></activity>
     <activity
       android:name=".activities.ChangeListActivity"
       android:label="@string/title_activity_change_activity"
-      android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-    </activity>
+      android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
 
     <service android:name=".AutoUpdater" />
   </application>
