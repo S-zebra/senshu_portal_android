@@ -14,6 +14,9 @@ import java.util.List;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.models.News;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 /**
  * Created by s-zebra on 2/29/20.
  */
@@ -40,6 +43,11 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     News item = newsList.get(position);
     holder.bodyPrevLabel.setText(item.getBody());
     holder.subjectLabel.setText(item.getSubject());
+    holder.senderLabel.setText(item.getSender());
+    holder.importantIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
+    holder.newIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
+    holder.checkOpenIcon.setVisibility(item.isConfirmOpen() ? VISIBLE : GONE);
+    holder.dateLabel.setText(String.format("%d月%02d日", item.getPublishStartDate().getMonth() + 1, item.getPublishStartDate().getDate()));
     // TODO: Do more view setup
   }
   
