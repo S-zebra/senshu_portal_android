@@ -5,37 +5,23 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context="szebra.senshu_timetable.activities.TimetableActivity">
+  tools:context="szebra.senshu_timetable.activities.TimetableFragment">
 
-
-  <android.support.v7.widget.Toolbar
-    android:id="@+id/mainToolbar"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    android:theme="?attr/actionBarTheme"
-    app:elevation="4dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
 
   <HorizontalScrollView
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_marginTop="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/mainToolbar"
-    app:layout_constraintVertical_bias="0.0">
+    app:layout_constraintTop_toTopOf="parent">
 
     <ScrollView
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:layout_marginBottom="8dp"
-      android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginBottom="8dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -46,60 +32,59 @@
       <TableLayout
         android:id="@+id/timetable"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TableRow
           android:id="@+id/row_dow"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent" />
 
         <TableRow
           android:id="@+id/row_schedule"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent" />
 
         <TableRow
           android:id="@+id/row_1st"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_2nd"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_3rd"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_4th"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_5th"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_6th"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
 
         <TableRow
           android:id="@+id/row_7th"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/cellBorder"/>
+          android:background="@color/cellBorder" />
       </TableLayout>
     </ScrollView>
 
@@ -111,12 +96,10 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    android:layout_marginTop="8dp"
     android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/mainToolbar" />
+    app:layout_constraintRight_toRightOf="parent" />
 
   <TextView
     android:id="@+id/loadingText"

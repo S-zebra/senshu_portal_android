@@ -1,18 +1,19 @@
 package szebra.senshu_timetable.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -25,8 +26,9 @@ import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
 
-public class TimetableActivity extends AppCompatActivity implements TaskCallback {
+public class TimetableFragment extends Fragment implements TaskCallback {
   private TableLayout timetable;
+  private View view;
   
   private int[] rows = {
     R.id.row_1st, R.id.row_2nd, R.id.row_3rd,
@@ -39,17 +41,20 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
   private final boolean forceRefresh = true;
   private boolean readyToUpdate = false;
   
+  @Nullable
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_timetable);
-    Toolbar toolbar = findViewById(R.id.mainToolbar);
-    setSupportActionBar(toolbar);
-    
-    timetable = findViewById(R.id.timetable);
-    mProgressBar = findViewById(R.id.circularIndicator);
-    mWaitingLabel = findViewById(R.id.loadingText);
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_timetable, container, false);
+  }
   
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    view = getView();
+    timetable = view.findViewById(R.id.timetable);
+    mProgressBar = view.findViewById(R.id.circularIndicator);
+    mWaitingLabel = view.findViewById(R.id.loadingText);
+    
     addtodayRow();
     if (initCredential()) {
       showProgressBar();
@@ -57,7 +62,7 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
       task.setCallback(this);
       task.execute();
     } else {
-      startActivity(new Intent(this, LoginActivity.class));
+      startActivity(new Intent(getActivity(), LoginActivity.class));
     }
   }
   
@@ -74,7 +79,6 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
   @Override
   public void onTaskCompleted(Throwable exception) {
     if (exception != null) {
-      Toast.makeText(this, exception.getClass().getSimpleName() + ":" + exception.getMessage(), Toast.LENGTH_SHORT).show();
       return;
     }
     setTimetable();
@@ -111,12 +115,12 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
   public void setTimetable() {
     Realm realm = Realm.getDefaultInstance();
     for (int period = 0; period < rows.length; period++) {
-      TableRow row = findViewById(rows[period]);
-      PeriodHoursView phv = new PeriodHoursView(this);
+      TableRow row = view.findViewById(rows[period]);
+      PeriodHoursView phv = new PeriodHoursView(getActivity());
       phv.setPeriod(period);
       row.addView(phv);
       for (int day = 0; day < youbi.length; day++) {
-        ClassCell cell = new ClassCell(this);
+        ClassCell cell = new ClassCell(getActivity());
         cell.setLecture(realm.where(Lecture.class).equalTo("day", day).equalTo("period", period).findFirst());
         row.addView(cell);
       }
@@ -126,12 +130,12 @@ public class TimetableActivity extends AppCompatActivity implements TaskCallback
   }
   
   private void addtodayRow() {
-    TableRow r = findViewById(R.id.row_dow);
-    r.addView(new TextView(this));
-    ClassCell cellToAdjust = new ClassCell(this);
+    TableRow r = view.findViewById(R.id.row_dow);
+    r.addView(new TextView(getActivity()));
+    ClassCell cellToAdjust = new ClassCell(getActivity());
     int cellWidth = cellToAdjust.getWidth();
     for (int day = 0; day < youbi.length; day++) {
-      TextView tv = new TextView(this);
+      TextView tv = new TextView(getActivity());
       tv.setWidth(cellWidth);
       tv.setGravity(Gravity.CENTER);
       tv.setText(youbi[day]);
