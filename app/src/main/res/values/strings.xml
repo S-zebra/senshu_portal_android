@@ -29,4 +29,6 @@
   <string name="kyuko">No lecture</string>
   <string name="change">Change</string>
   <string name="separate_colon" translatable="false">%1$s: %2$s</string>
+  <string name="hint_drawer_open">Open Drawer</string>
+  <string name="hint_drawer_close">Close Drawer</string>
 </resources>

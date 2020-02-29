@@ -24,4 +24,6 @@
   <string name="title_activity_change_activity">休講・変更情報</string>
   <string name="kyuko">休講</string>
   <string name="change">変更</string>
+  <string name="hint_drawer_open">ドロワーを開く</string>
+  <string name="hint_drawer_close">ドロワーを閉じる</string>
 </resources>
