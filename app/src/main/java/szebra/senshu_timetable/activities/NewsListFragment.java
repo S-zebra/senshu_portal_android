@@ -31,20 +31,27 @@ public class NewsListFragment extends Fragment implements TaskCallback {
   }
   
   @Override
+  public void onResume() {
+    super.onResume();
+    updateList();
+  }
+  
+  @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     recycler = getView().findViewById(R.id.news_list);
     realm = Realm.getDefaultInstance();
-    List<News> news = realm.where(News.class).findAll();
-    if (news.isEmpty()) {
+    if (realm.where(News.class).findAll().isEmpty()) {
       FetchNewsTask task = new FetchNewsTask();
       task.setReference(this);
       task.execute(NewsType.PRIVATE);
+      return;
     }
-    updateList(news);
+    updateList();
   }
   
-  private void updateList(List<News> news) {
+  private void updateList() {
+    List<News> news = realm.where(News.class).findAll();
     Log.d(getClass().getSimpleName(), "updateList(): " + news.toString());
     recycler.setLayoutManager(new LinearLayoutManager(getContext()));
     recycler.setAdapter(new NewsRVAdapter(getContext(), news));
@@ -52,6 +59,6 @@ public class NewsListFragment extends Fragment implements TaskCallback {
   
   @Override
   public void onTaskCompleted(Throwable exception) {
-    updateList(realm.where(News.class).findAll());
+    updateList();
   }
 }
