@@ -1,7 +1,6 @@
 package szebra.senshu_timetable.activities;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,13 +16,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import szebra.senshu_timetable.R;
-import szebra.senshu_timetable.models.Credential;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.tasks.UpdateTimetableTask;
 import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
-import szebra.senshu_timetable.util.PortalCommunicator;
 import szebra.senshu_timetable.views.ClassCell;
 import szebra.senshu_timetable.views.PeriodHoursView;
 
@@ -41,6 +37,7 @@ public class TimetableFragment extends Fragment implements TaskCallback {
   private TextView mWaitingLabel;
   private final boolean forceRefresh = true;
   private boolean readyToUpdate = false;
+  private Realm realm;
   
   @Nullable
   @Override
@@ -57,24 +54,17 @@ public class TimetableFragment extends Fragment implements TaskCallback {
     mWaitingLabel = view.findViewById(R.id.loadingText);
     
     addtodayRow();
-    if (initCredential()) {
-      showProgressBar();
-      UpdateTimetableTask task = new UpdateTimetableTask();
-      task.setCallback(this);
-      task.execute();
-    } else {
-      startActivity(new Intent(getActivity(), LoginActivity.class));
-    }
+    realm = Realm.getDefaultInstance();
+    showProgressBar();
+    UpdateTimetableTask task = new UpdateTimetableTask();
+    task.setCallback(this);
+    task.execute();
   }
   
-  public boolean initCredential() {
-    Realm realm = Realm.getDefaultInstance();
-    RealmResults<Credential> credentials = realm.where(Credential.class).findAll();
-    if (credentials.isEmpty()) return false;
-    Credential firstItem = credentials.first();
-    Credential newCredential = new Credential(firstItem.getUserName(), firstItem.getPassword());
-    PortalCommunicator.getInstance().setCredential(newCredential);
-    return true;
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    realm.close();
   }
   
   @Override
@@ -114,7 +104,6 @@ public class TimetableFragment extends Fragment implements TaskCallback {
   }
   
   public void setTimetable() {
-    Realm realm = Realm.getDefaultInstance();
     for (int period = 0; period < rows.length; period++) {
       TableRow row = view.findViewById(rows[period]);
       PeriodHoursView phv = new PeriodHoursView(getActivity());
@@ -127,7 +116,6 @@ public class TimetableFragment extends Fragment implements TaskCallback {
       }
     }
     hideProgressBar();
-    realm.close();
   }
   
   private void addtodayRow() {
