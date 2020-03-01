@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     drawerToggle.syncState();
   
     fragmentsMap = new HashMap<>();
-    onOptionsItemSelected((MenuItem) findViewById(R.id.drawer_item_timetable));
+//    onNavigationItemSelected((MenuItem) findViewById(R.id.drawer_item_timetable));
+    switchFragment(R.id.drawer_item_timetable);
   }
   
   @Override

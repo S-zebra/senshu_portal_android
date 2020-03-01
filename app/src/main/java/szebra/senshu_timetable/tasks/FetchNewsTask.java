@@ -12,6 +12,7 @@ import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import io.realm.Realm;
 import szebra.senshu_timetable.PortalURL;
@@ -102,8 +103,16 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
         String bodyText = row.wholeText();
-        Log.d(getClass().getSimpleName(), "storeNewItems(): old: " + bodyText);
-        bodyText = bodyText.replaceAll("^.+公開期間.+\\n", "").trim();
+        int kikanPos = bodyText.indexOf("公開期間");
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(Integer.parseInt(bodyText.substring(kikanPos + 24, kikanPos + 28)),
+          Integer.parseInt(bodyText.substring(kikanPos + 29, kikanPos + 31)),
+          Integer.parseInt(bodyText.substring(kikanPos + 32, kikanPos + 34)),
+          Integer.parseInt(bodyText.substring(kikanPos + 35, kikanPos + 37)),
+          Integer.parseInt(bodyText.substring(kikanPos + 38, kikanPos + 40)));
+        prevItem.setPublishEndDate(cal.getTime());
+        bodyText = bodyText.substring(kikanPos + 41).trim();
         Log.d(getClass().getSimpleName(), "storeNewItems(): new: " + bodyText);
         prevItem.setBody(bodyText);
         realm.copyToRealmOrUpdate(prevItem);
