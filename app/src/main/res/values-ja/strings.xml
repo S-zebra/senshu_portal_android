@@ -26,4 +26,7 @@
   <string name="change">変更</string>
   <string name="hint_drawer_open">ドロワーを開く</string>
   <string name="hint_drawer_close">ドロワーを閉じる</string>
+  <string name="tab_news_private">個人伝言</string>
+  <string name="tab_news_public">お知らせ</string>
+  <string name="tab_news_jobs">就職</string>
 </resources>

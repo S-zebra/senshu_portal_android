@@ -5,6 +5,7 @@ import java.util.Date;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import szebra.senshu_timetable.tasks.NewsCategory;
 
 /**
  * Created by s-zebra on 2/29/20.
@@ -24,6 +25,9 @@ public class News extends RealmObject {
   private boolean important;
   private boolean replyRequired;
   private boolean hasAttachments;
+  private boolean isRead;
+  private int categoryCode;
+  
   
   private RealmList<NewsAttachment> attachments;
   
@@ -56,10 +60,6 @@ public class News extends RealmObject {
     this.checkReadId = checkReadId;
   }
   
-  public void setNew(boolean aNew) {
-    isNew = aNew;
-  }
-  
   public boolean isReplyRequired() {
     return replyRequired;
   }
@@ -68,7 +68,7 @@ public class News extends RealmObject {
     this.replyRequired = replyRequired;
   }
   
-  public boolean isHasAttachments() {
+  public boolean hasAttachments() {
     return hasAttachments;
   }
   
@@ -150,6 +150,22 @@ public class News extends RealmObject {
   
   public boolean isImportant() {
     return important;
+  }
+  
+  public NewsCategory getCategory() {
+    return NewsCategory.fromCode(categoryCode);
+  }
+  
+  public void setCategory(NewsCategory category) {
+    this.categoryCode = category.getNumVal();
+  }
+  
+  public boolean isRead() {
+    return isRead;
+  }
+  
+  public void setRead(boolean read) {
+    isRead = read;
   }
   
   public RealmList<NewsAttachment> getAttachments() {

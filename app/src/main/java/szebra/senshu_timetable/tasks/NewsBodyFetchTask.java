@@ -38,7 +38,7 @@ public class NewsBodyFetchTask extends AsyncTask<Integer, Void, Exception> {
         return doInBackground(integers);
       }
       Log.d(getClass().getSimpleName(), "doInBackground(): " + doc.html());
-      String bodyText = doc.selectFirst("div.message_check div").text();
+      String bodyText = doc.selectFirst("div.message_check div").wholeText();
       bodyText = bodyText.substring(bodyText.indexOf("公開期間") + 41).trim();
       
       Realm realm = Realm.getDefaultInstance();

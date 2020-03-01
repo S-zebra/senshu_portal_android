@@ -16,13 +16,14 @@ import io.realm.Realm;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.models.News;
 import szebra.senshu_timetable.tasks.FetchNewsTask;
-import szebra.senshu_timetable.tasks.NewsType;
+import szebra.senshu_timetable.tasks.NewsCategory;
 import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.views.recyclerview.NewsRVAdapter;
 
 public class NewsListFragment extends Fragment implements TaskCallback {
   private Realm realm;
   private RecyclerView recycler;
+  private int catCode;
   
   @Nullable
   @Override
@@ -41,17 +42,24 @@ public class NewsListFragment extends Fragment implements TaskCallback {
     super.onActivityCreated(savedInstanceState);
     recycler = getView().findViewById(R.id.news_list);
     realm = Realm.getDefaultInstance();
-    if (realm.where(News.class).findAll().isEmpty()) {
+    catCode = getArguments().getInt("CATEGORY");
+  
+  
+    Log.d(getClass().getSimpleName(), "onActivityCreated(): news1: " + realm.where(News.class).findFirst());
+    Log.d(getClass().getSimpleName(), "onActivityCreated(): catCode: " + catCode);
+    List<News> news = realm.where(News.class).equalTo("categoryCode", catCode).findAll();
+    if (news.isEmpty()) {
+      Log.d(getClass().getSimpleName(), "onActivityCreated(): " + news + " Refreshing");
       FetchNewsTask task = new FetchNewsTask();
       task.setReference(this);
-      task.execute(NewsType.PRIVATE);
+      task.execute(NewsCategory.fromCode(catCode));
       return;
     }
     updateList();
   }
   
   private void updateList() {
-    List<News> news = realm.where(News.class).findAll();
+    List<News> news = realm.where(News.class).equalTo("categoryCode", catCode).findAll();
     Log.d(getClass().getSimpleName(), "updateList(): " + news.toString());
     recycler.setLayoutManager(new LinearLayoutManager(getContext()));
     recycler.setAdapter(new NewsRVAdapter(getContext(), news));

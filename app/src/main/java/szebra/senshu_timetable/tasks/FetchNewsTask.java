@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import io.realm.Realm;
 import szebra.senshu_timetable.PortalURL;
@@ -23,18 +24,17 @@ import szebra.senshu_timetable.util.PortalCommunicator;
 /**
  * Created by s-zebra on 2/29/20.
  */
-public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
+public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   private Realm realm;
   private WeakReference<TaskCallback> reference;
   
   @Override
-  protected Exception doInBackground(NewsType... types) {
+  protected Exception doInBackground(NewsCategory... categories) {
     realm = Realm.getDefaultInstance();
     realm.beginTransaction();
-    realm.delete(News.class);
     try {
-      for (NewsType type : types) {
-        fetchPage(type);
+      for (NewsCategory category : categories) {
+        fetchPage(category);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -74,16 +74,21 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
     return maxNumber;
   }
   
-  private void fetchPage(NewsType type) throws IOException, InvalidCredentialException {
+  private void fetchPage(NewsCategory category) throws IOException, InvalidCredentialException {
     PortalCommunicator comm = PortalCommunicator.getInstance();
     Document doc = comm.get(PortalURL.NEWS_URL_UNREAD);
+    // カテゴリを設定
+    HashMap<String, String> catData = new HashMap<>();
+    catData.put("category_cd", String.valueOf(category.getNumVal()));
+    doc = comm.post(PortalURL.NEWS_URL_UNREAD, catData);
+    Log.d(getClass().getSimpleName(), "fetchPage(): " + doc.html());
     int maxPages = getMaxPages(doc);
-    if (!storeNewItems(doc)) {
+    if (!storeNewItems(doc, category)) {
       return;
     }
     for (int curPage = 1; curPage <= maxPages; curPage++) {
       doc = comm.get(PortalURL.NEWS_URL_UNREAD + "?page=" + curPage);
-      if (!storeNewItems(doc)) {
+      if (!storeNewItems(doc, category)) {
         break;
       }
     }
@@ -95,7 +100,7 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
    * @param doc <code>org.jsoup.Document</code> to parse
    * @return Whether there was a new message.
    */
-  private boolean storeNewItems(Document doc) {
+  private boolean storeNewItems(Document doc, NewsCategory category) {
     Elements rows = doc.select("table.new_message  tr");
     News prevItem = null;
     for (Element row : rows) {
@@ -135,6 +140,7 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
       newsItem.setIsNew(!metaCol.getElementsByAttributeValueContaining("alt", "NEW").isEmpty());
       newsItem.setImportant(!metaCol.getElementsByAttributeValueContaining("alt", "緊急").isEmpty());
       newsItem.setConfirmOpen(!metaCol.getElementsByAttributeValueContaining("alt", "開封確認").isEmpty());
+      newsItem.setCategory(category);
       if (newsItem.isConfirmOpen()) {
         String aHref = metaCol.selectFirst("a").attr("href");
         int messageId = Integer.parseInt(aHref.substring(72, 78));
