@@ -48,8 +48,9 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     holder.importantIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
     holder.newIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
     holder.checkOpenIcon.setVisibility(item.isConfirmOpen() ? VISIBLE : GONE);
+    holder.replyIcon.setVisibility(item.isReplyRequired() ? VISIBLE : GONE);
+    holder.hasAttachIcon.setVisibility(item.hasAttachments() ? VISIBLE : GONE);
     holder.dateLabel.setText(String.format("%d月%02d日", item.getPublishStartDate().getMonth() + 1, item.getPublishStartDate().getDate()));
-  
   }
   
   @Override
@@ -80,7 +81,7 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
 class NewsViewHolder extends RecyclerView.ViewHolder {
   protected TextView senderLabel, subjectLabel, bodyPrevLabel, dateLabel;
-  protected ImageView importantIcon, newIcon, checkOpenIcon, hasAttachIcon;
+  protected ImageView importantIcon, newIcon, checkOpenIcon, hasAttachIcon, replyIcon;
   protected CheckBox checkBox;
   
   public NewsViewHolder(View itemView) {
@@ -94,6 +95,7 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
     this.checkOpenIcon = itemView.findViewById(R.id.news_item_ic_chkopen);
     this.hasAttachIcon = itemView.findViewById(R.id.news_item_ic_attach);
     this.checkBox = itemView.findViewById(R.id.news_item_checkbox);
+    this.replyIcon = itemView.findViewById(R.id.news_item_ic_reply);
   }
   
 }

@@ -140,6 +140,9 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
       newsItem.setIsNew(!metaCol.getElementsByAttributeValueContaining("alt", "NEW").isEmpty());
       newsItem.setImportant(!metaCol.getElementsByAttributeValueContaining("alt", "緊急").isEmpty());
       newsItem.setConfirmOpen(!metaCol.getElementsByAttributeValueContaining("alt", "開封確認").isEmpty());
+      newsItem.setHasAttachments(!metaCol.getElementsByAttributeValueContaining("alt", "添付あり").isEmpty());
+      newsItem.setReplyRequired(!metaCol.getElementsByAttributeValueContaining("alt", "要返信").isEmpty());
+      
       newsItem.setCategory(category);
       if (newsItem.isConfirmOpen()) {
         String aHref = metaCol.selectFirst("a").attr("href");

@@ -4,8 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:focusable="true"
-  android:clickable="true">
+  android:clickable="true"
+  android:focusable="true">
 
   <TextView
     android:id="@+id/news_item_sender"
@@ -105,7 +105,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="4dp"
     android:layout_marginRight="4dp"
-    android:visibility="gone"
+    android:layout_marginBottom="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:srcCompat="@drawable/ic_attachment_black_24dp" />
@@ -126,4 +126,14 @@
     app:layout_constraintStart_toEndOf="@+id/news_item_checkbox"
     app:layout_constraintTop_toBottomOf="@+id/news_item_sender"
     tools:text="新型コロナウイルス感染症拡大に伴うイベント等の対応について" />
+
+  <ImageView
+    android:id="@+id/news_item_ic_reply"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="@+id/news_item_checkbox"
+    app:layout_constraintStart_toStartOf="@+id/news_item_checkbox"
+    app:layout_constraintTop_toBottomOf="@+id/news_item_checkbox"
+    app:srcCompat="@drawable/ic_reply_black_24dp" />
+
 </android.support.constraint.ConstraintLayout>
