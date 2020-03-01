@@ -107,7 +107,7 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
         Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(Integer.parseInt(bodyText.substring(kikanPos + 24, kikanPos + 28)),
-          Integer.parseInt(bodyText.substring(kikanPos + 29, kikanPos + 31)),
+          Integer.parseInt(bodyText.substring(kikanPos + 29, kikanPos + 31)) - 1,
           Integer.parseInt(bodyText.substring(kikanPos + 32, kikanPos + 34)),
           Integer.parseInt(bodyText.substring(kikanPos + 35, kikanPos + 37)),
           Integer.parseInt(bodyText.substring(kikanPos + 38, kikanPos + 40)));
