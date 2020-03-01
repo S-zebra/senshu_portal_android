@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ import szebra.senshu_timetable.views.recyclerview.NewsRVAdapter;
 
 public class NewsListFragment extends Fragment implements TaskCallback {
   private Realm realm;
+  private RecyclerView recycler;
   
   @Nullable
   @Override
@@ -33,21 +33,21 @@ public class NewsListFragment extends Fragment implements TaskCallback {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    recycler = getView().findViewById(R.id.news_list);
     realm = Realm.getDefaultInstance();
     List<News> news = realm.where(News.class).findAll();
+    if (news.isEmpty()) {
+      FetchNewsTask task = new FetchNewsTask();
+      task.setReference(this);
+      task.execute(NewsType.PRIVATE);
+    }
     updateList(news);
-    Toast.makeText(getContext(), "Updating...", Toast.LENGTH_SHORT).show();
-    FetchNewsTask task = new FetchNewsTask();
-    task.setReference(this);
-    task.execute(NewsType.PRIVATE);
-  
   }
   
   private void updateList(List<News> news) {
     Log.d(getClass().getSimpleName(), "updateList(): " + news.toString());
-    RecyclerView newsRV = getView().findViewById(R.id.news_list);
-    newsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-    newsRV.setAdapter(new NewsRVAdapter(getContext(), news));
+    recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    recycler.setAdapter(new NewsRVAdapter(getContext(), news));
   }
   
   @Override

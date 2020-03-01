@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".views.recyclerview.NewsDetailActivity">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/news_det_toolbar"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="?attr/actionBarTheme"
+    app:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <ProgressBar
+    android:id="@+id/news_det_progress"
+    style="@style/Widget.AppCompat.ProgressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:indeterminate="false"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/news_det_toolbar" />
+
+  <ScrollView
+    android:id="@+id/scrollView2"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/news_det_toolbar">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/news_det_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="24sp"
+        tools:text="【学生生活課】学生自治会からのお知らせ（新入生勧誘説明会）" />
+
+      <TextView
+        android:id="@+id/news_det_sender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="14sp"
+        tools:text="国際交流事務課" />
+
+      <TextView
+        android:id="@+id/news_det_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@android:color/primary_text_light"
+        tools:text="2020/3/1 〜 2020/3/31" />
+
+      <TextView
+        android:id="@+id/news_det_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/primary_text_light"
+        tools:text="学生各位\n\n新型コロナウイルス感染拡大の予防及び国際交流会館居住者の感染防止・安全確保のため、下記の期間、居住者及び関係者以外の立入を禁止することとなりましたのでお知らせします。\n\n＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\n立入禁止期間\n２月２７日（木）～３月２４日（火）まで\n＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\n\nなお、今後の動向によっては、立入禁止の期間が変更される場合もあります。その場合は、改めてポータルの「お知らせ」にて連絡します。\n\n以　上" />
+
+    </LinearLayout>
+  </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

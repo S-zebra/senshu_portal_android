@@ -12,6 +12,7 @@ import io.realm.annotations.PrimaryKey;
 public class News extends RealmObject {
   @PrimaryKey
   private int id;
+  private int checkReadId;
   private Date publishStartDate;
   private Date publishEndDate;
   private Date lastViewedDate;
@@ -21,6 +22,9 @@ public class News extends RealmObject {
   private boolean isNew;
   private boolean confirmOpen;
   private boolean important;
+  private boolean replyRequired;
+  private boolean hasAttachments;
+  
   private RealmList<NewsAttachment> attachments;
   
   public News() {
@@ -42,6 +46,34 @@ public class News extends RealmObject {
   
   public void setPublishStartDate(Date publishStartDate) {
     this.publishStartDate = publishStartDate;
+  }
+  
+  public int getCheckReadId() {
+    return checkReadId;
+  }
+  
+  public void setCheckReadId(int checkReadId) {
+    this.checkReadId = checkReadId;
+  }
+  
+  public void setNew(boolean aNew) {
+    isNew = aNew;
+  }
+  
+  public boolean isReplyRequired() {
+    return replyRequired;
+  }
+  
+  public void setReplyRequired(boolean replyRequired) {
+    this.replyRequired = replyRequired;
+  }
+  
+  public boolean isHasAttachments() {
+    return hasAttachments;
+  }
+  
+  public void setHasAttachments(boolean hasAttachments) {
+    this.hasAttachments = hasAttachments;
   }
   
   public void setPublishEndDate(Date publishEndDate) {

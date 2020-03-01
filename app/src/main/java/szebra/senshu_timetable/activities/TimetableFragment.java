@@ -64,6 +64,7 @@ public class TimetableFragment extends Fragment implements TaskCallback {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    if (realm == null) return;
     realm.close();
   }
   

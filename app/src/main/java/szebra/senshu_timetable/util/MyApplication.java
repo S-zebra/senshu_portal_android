@@ -45,6 +45,7 @@ public class MyApplication extends Application {
   private void initCommunicatorCredential() {
     Realm realm = Realm.getDefaultInstance();
     Credential credential = realm.where(Credential.class).findFirst();
+    if (credential == null) return;
     Credential newCredential = new Credential(credential.getUserName(), credential.getPassword());
     PortalCommunicator.getInstance().setCredential(newCredential);
     realm.close();

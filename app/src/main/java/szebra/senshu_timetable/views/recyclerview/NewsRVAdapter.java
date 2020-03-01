@@ -1,6 +1,7 @@
 package szebra.senshu_timetable.views.recyclerview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,12 +49,23 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     holder.newIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
     holder.checkOpenIcon.setVisibility(item.isConfirmOpen() ? VISIBLE : GONE);
     holder.dateLabel.setText(String.format("%d月%02d日", item.getPublishStartDate().getMonth() + 1, item.getPublishStartDate().getDate()));
-    // TODO: Do more view setup
+  
   }
   
   @Override
   public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new NewsViewHolder(inflater.inflate(R.layout.news_item, parent, false));
+    final RecyclerView rv = (RecyclerView) parent;
+    final View newsItem = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false);
+    newsItem.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        int vPos = rv.getChildLayoutPosition(newsItem);
+        Intent intent = new Intent(context, NewsDetailActivity.class);
+        intent.putExtra("NEWS_ID", newsList.get(vPos).getId());
+        context.startActivity(intent);
+      }
+    });
+    return new NewsViewHolder(newsItem);
   }
   
   @Override
