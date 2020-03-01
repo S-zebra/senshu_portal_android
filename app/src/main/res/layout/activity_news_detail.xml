@@ -68,6 +68,19 @@
         android:textSize="14sp"
         tools:text="国際交流事務課" />
 
+      <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <LinearLayout
+          android:id="@+id/news_det_attach_list"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:orientation="horizontal" />
+      </HorizontalScrollView>
+
       <TextView
         android:id="@+id/news_det_date"
         android:layout_width="match_parent"

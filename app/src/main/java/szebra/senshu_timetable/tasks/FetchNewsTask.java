@@ -18,6 +18,7 @@ import java.util.HashMap;
 import io.realm.Realm;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.News;
+import szebra.senshu_timetable.models.NewsAttachment;
 import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.util.PortalCommunicator;
 
@@ -106,7 +107,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
     for (Element row : rows) {
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
-        String bodyText = row.wholeText();
+        String bodyText = row.selectFirst("div.new_message_normal div").ownText();
         int kikanPos = bodyText.indexOf("公開期間");
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -119,6 +120,16 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
         bodyText = bodyText.substring(kikanPos + 41).trim();
         Log.d(getClass().getSimpleName(), "storeNewItems(): new: " + bodyText);
         prevItem.setBody(bodyText);
+  
+        Elements attachmentLinks = row.select("div.message_file a");
+        if (!attachmentLinks.isEmpty()) {
+          for (Element aElem : attachmentLinks) {
+            String fileId = aElem.attr("href").substring(40);
+            String fileName = aElem.ownText();
+            NewsAttachment attachment = new NewsAttachment(fileId, fileName);
+            prevItem.getAttachments().add(attachment);
+          }
+        }
         realm.copyToRealmOrUpdate(prevItem);
         continue;
       }

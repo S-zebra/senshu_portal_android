@@ -85,6 +85,7 @@ public class PortalCommunicator {
     //Get cookies from top page
     Log.d(CLASS_NAME, "GET'ing top page...");
     connection = Jsoup.connect(PortalURL.LOGIN_URL);
+    connection.ignoreContentType(true);
     connection.get();
     if (connection.response().cookies().size() > 0) {
       this.cookies = connection.response().cookies();
@@ -134,6 +135,27 @@ public class PortalCommunicator {
       this.cookies = connection.response().cookies();
     }
     return doc;
+  }
+  
+  public byte[] getBytes(String url) throws IOException, InvalidCredentialException {
+    return getBytesInternal(url, 0);
+  }
+  
+  private byte[] getBytesInternal(String url, int count) throws IOException, InvalidCredentialException {
+    if (connection == null) logIn();
+    connection.url(url);
+    connection.cookies(cookies);
+    connection.execute();
+    byte[] res = connection.response().bodyAsBytes();
+    if (connection.response().url().toString().contains("Error.php")) {
+      if (count >= 2) throw new IOException("Unknown Server error");
+      logIn();
+      getBytesInternal(url, ++count);
+    }
+    if (connection.response().cookies().size() > 0) {
+      this.cookies = connection.response().cookies();
+    }
+    return res;
   }
   
   public Document post(String url, Map<String, String> data) throws IOException, InvalidCredentialException {

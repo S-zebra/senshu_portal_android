@@ -4,12 +4,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.News;
+import szebra.senshu_timetable.models.NewsAttachment;
 import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
 import szebra.senshu_timetable.util.PortalCommunicator;
 
@@ -45,6 +48,16 @@ public class NewsBodyFetchTask extends AsyncTask<Integer, Void, Exception> {
       News targetNews = realm.where(News.class).equalTo("checkReadId", integers[0]).findFirst();
       realm.beginTransaction();
       targetNews.setBody(bodyText);
+  
+      Elements attachmentLinks = doc.select("div.message_file a");
+      if (!attachmentLinks.isEmpty()) {
+        for (Element aElem : attachmentLinks) {
+          String fileId = aElem.attr("href").substring(40);
+          String fileName = aElem.ownText();
+          NewsAttachment attachment = new NewsAttachment(fileId, fileName);
+          targetNews.getAttachments().add(attachment);
+        }
+      }
       realm.copyToRealmOrUpdate(targetNews);
       realm.commitTransaction();
       realm.close();
