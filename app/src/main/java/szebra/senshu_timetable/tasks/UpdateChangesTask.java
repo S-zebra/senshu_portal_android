@@ -47,8 +47,7 @@ public final class UpdateChangesTask extends AsyncTask<Void, Void, Throwable> {
     realm.delete(ChangeInfo.class);
     PortalCommunicator comm = PortalCommunicator.getInstance();
     try {
-      comm.refreshSession();
-      Document document = comm.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.CHANGES_URL, null);
+      Document document = comm.get(PortalURL.CHANGES_URL);
       parse(document, ChangeType.休講);
       parse(document, ChangeType.各種変更);
     } catch (Exception e) {

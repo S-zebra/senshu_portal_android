@@ -1,5 +1,6 @@
 package szebra.senshu_timetable.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import java.util.HashMap;
 
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.util.PortalCommunicator;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private ActionBarDrawerToggle drawerToggle;
@@ -39,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     fragmentsMap = new HashMap<>();
 //    onNavigationItemSelected((MenuItem) findViewById(R.id.drawer_item_timetable));
     switchFragment(R.id.drawer_item_timetable);
+  
+    if (!PortalCommunicator.getInstance().hasCredential()) {
+      startActivity(new Intent(this, LoginActivity.class));
+      finish();
+    }
   }
   
   @Override

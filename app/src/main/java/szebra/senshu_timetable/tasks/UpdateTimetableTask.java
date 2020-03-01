@@ -36,9 +36,8 @@ public final class UpdateTimetableTask extends AsyncTask<Void, Void, Throwable> 
   protected Throwable doInBackground(Void... voids) {
     PortalCommunicator communicator = PortalCommunicator.getInstance();
     try {
-      communicator.refreshSession();
       //TODO: TBD: 期の切り替えをどうするか
-      Document doc = communicator.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.TIMETABLE_LATTER_URL, null);
+      Document doc = communicator.get(PortalURL.TIMETABLE_LATTER_URL);
       parse(doc);
     } catch (Exception e) {
       e.printStackTrace();

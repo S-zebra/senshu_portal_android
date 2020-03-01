@@ -22,7 +22,8 @@ public class LoginTask extends AsyncTask<Credential, Void, Throwable> {
   @Override
   protected Throwable doInBackground(Credential... credentials) {
     try {
-      communicator.logIn(credentials[0]);
+      communicator.setCredential(credentials[0]);
+      communicator.logIn();
       return null;
     } catch (Exception e) {
       e.printStackTrace();

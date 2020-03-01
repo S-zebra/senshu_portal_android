@@ -76,14 +76,13 @@ public class FetchNewsTask extends AsyncTask<NewsType, Void, Exception> {
   
   private void fetchPage(NewsType type) throws IOException, InvalidCredentialException {
     PortalCommunicator comm = PortalCommunicator.getInstance();
-    comm.refreshSession();
-    Document doc = comm.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.NEWS_URL_UNREAD, null);
+    Document doc = comm.get(PortalURL.NEWS_URL_UNREAD);
     int maxPages = getMaxPages(doc);
     if (!storeNewItems(doc)) {
       return;
     }
     for (int curPage = 1; curPage <= maxPages; curPage++) {
-      doc = comm.moveTo(PortalCommunicator.MoveMode.GET, PortalURL.NEWS_URL_UNREAD + "?page=" + curPage, null);
+      doc = comm.get(PortalURL.NEWS_URL_UNREAD + "?page=" + curPage);
       if (!storeNewItems(doc)) {
         break;
       }

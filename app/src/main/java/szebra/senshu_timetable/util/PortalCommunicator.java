@@ -1,6 +1,5 @@
 package szebra.senshu_timetable.util;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.jsoup.Connection;
@@ -47,19 +46,22 @@ public class PortalCommunicator {
     this.credential = credential;
   }
   
-  public void refreshSession() throws IOException, InvalidCredentialException {
+  public boolean hasCredential() {
+    return credential != null;
+  }
+  
+  private void refreshSession() throws IOException, InvalidCredentialException {
     if (connection == null) {
-      logIn(credential);
+      logIn();
     }
     connection.get();
     if (connection.response().url().toString().contains("Error.php")) {
-      logIn(credential);
+      logIn();
     }
   }
   
-  public boolean logIn(Credential credential) throws IOException, InvalidCredentialException {
-    this.credential = credential;
-    return logIn(credential.getUserName(), credential.getPassword());
+  public void logIn() throws IOException, InvalidCredentialException {
+    logIn(credential.getUserName(), credential.getPassword());
   }
   
   /**
@@ -67,11 +69,10 @@ public class PortalCommunicator {
    *
    * @param userName User name
    * @param password Password
-   * @return <code>true</code>: Successful.<br>
-   * <code>false</code>: <code>userName</code> and/or <code>password</code> is not correct.
-   * @throws IOException Thrown when offline
+   * @throws IOException                Thrown when offline
+   * @throws InvalidCredentialException When Username or password is not correct.
    */
-  public boolean logIn(String userName, String password) throws IOException, InvalidCredentialException {
+  public void logIn(String userName, String password) throws IOException, InvalidCredentialException {
     
     //Check length
     if (userName.isEmpty()) {
@@ -98,7 +99,6 @@ public class PortalCommunicator {
     
     //Post credential + cookies
     connection.data(reqBody);
-//    dumpMap(credential, "Credential");
     connection.cookies(cookies);
     
     Log.d(CLASS_NAME, "Posting...");
@@ -112,46 +112,58 @@ public class PortalCommunicator {
       if (connection.response().cookies().size() > 0) {
         this.cookies = connection.response().cookies();
       }
-      return true;
     }
   }
   
+  public Document get(String url) throws IOException, InvalidCredentialException {
+    return getInternal(url, 0);
+  }
   
-  /**
-   * Sends an HTTP request to specified URL and gets <code>Document</code>.
-   *
-   * @param mode HTTP method (GET or POST).
-   * @param URL  URL to retrieve <code>Document</code> from.
-   * @param data Data to apply to HTTP request header.
-   * @return Document of Jsoup.
-   * @throws IOException Should be thrown when the device is offline.
-   */
-  public synchronized Document moveTo(MoveMode mode, @NonNull String URL, HashMap<String, String> data) throws IOException {
-    connection.url(URL);
+  private Document getInternal(String url, int count) throws IOException, InvalidCredentialException {
+    if (connection == null) logIn();
+    connection.url(url);
     connection.cookies(cookies);
-    dumpMap(cookies, "cookies");
-    if (data != null) {
-      connection.data(data);
-      dumpMap(data, "data");
-    }
-    Document doc;
-  
-    if (mode == MoveMode.POST) {
-      doc = connection.post();
-    } else {
-      doc = connection.get();
+    Document doc = connection.get();
+    Log.d(getClass().getSimpleName(), "getInternal(): GET'ed: " + doc.text());
+    if (connection.response().url().toString().contains("Error.php")) {
+      if (count >= 2) throw new IOException("Unknown Server error");
+      logIn();
+      getInternal(url, ++count);
     }
     if (connection.response().cookies().size() > 0) {
       this.cookies = connection.response().cookies();
     }
-    Log.d("Communicator", "Received content from " + URL + ": \n" + doc.html());
     return doc;
   }
   
-  public void logOut() throws IOException {
+  public Document post(String url, Map<String, String> data) throws IOException, InvalidCredentialException {
+    return postInternal(url, data, 0);
+  }
+  
+  private Document postInternal(String url, Map<String, String> data, int count) throws IOException, InvalidCredentialException {
+    if (connection == null) logIn();
+    connection.url(url);
+    connection.cookies(cookies);
+    if (data != null) {
+      connection.data(data);
+      dumpMap(data, "data");
+    }
+    Document doc = connection.post();
+    if (connection.response().url().toString().contains("Error.php")) {
+      if (count >= 2) throw new IOException("Unknown Server error");
+      logIn();
+      postInternal(url, data, ++count);
+    }
+    if (connection.response().cookies().size() > 0) {
+      this.cookies = connection.response().cookies();
+    }
+    return doc;
+  }
+  
+  public void logOut() throws IOException, InvalidCredentialException {
     HashMap<String, String> logOutData = new HashMap<>();
     logOutData.put("mode", "Logout");
-    moveTo(MoveMode.POST, PortalURL.LOGIN_URL, logOutData);
+    post(PortalURL.LOGIN_URL, logOutData);
   }
   
   private void dumpMap(Map<String, String> map, String name) {

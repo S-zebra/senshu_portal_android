@@ -9,6 +9,7 @@ import java.security.Key;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import szebra.senshu_timetable.models.Credential;
 
 /**
  * Created by s-zebra on 2018/04/22.
@@ -38,6 +39,15 @@ public class MyApplication extends Application {
     instance = this;
     Realm.init(this);
     Realm.setDefaultConfiguration(new RealmConfiguration.Builder().encryptionKey(currentKey).deleteRealmIfMigrationNeeded().build());
+    initCommunicatorCredential();
+  }
+  
+  private void initCommunicatorCredential() {
+    Realm realm = Realm.getDefaultInstance();
+    Credential credential = realm.where(Credential.class).findFirst();
+    Credential newCredential = new Credential(credential.getUserName(), credential.getPassword());
+    PortalCommunicator.getInstance().setCredential(newCredential);
+    realm.close();
   }
   
   public static MyApplication getInstance() {
