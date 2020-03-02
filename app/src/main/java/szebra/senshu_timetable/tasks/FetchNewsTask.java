@@ -108,7 +108,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
     for (Element row : rows) {
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
-        String bodyText = row.selectFirst("div.new_message_normal div").ownText();
+        String bodyText = row.selectFirst("div.new_message_normal div").wholeText();
         Log.d(getClass().getSimpleName(), "storeNewItems(): before: " + prevItem.getBody());
         int kikanPos = bodyText.indexOf("公開期間");
         Calendar cal = Calendar.getInstance();
