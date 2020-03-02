@@ -60,32 +60,18 @@
         android:id="@+id/news_det_sender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@android:color/primary_text_light"
         android:textSize="14sp"
         tools:text="国際交流事務課" />
 
-      <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
-
-        <LinearLayout
-          android:id="@+id/news_det_attach_list"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:orientation="horizontal" />
-      </HorizontalScrollView>
-
       <TextView
         android:id="@+id/news_det_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:textColor="@android:color/primary_text_light"
@@ -95,12 +81,21 @@
         android:id="@+id/news_det_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
         android:layout_marginRight="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginBottom="16dp"
+        android:textIsSelectable="true"
         android:textColor="@android:color/primary_text_light"
         tools:text="学生各位\n\n新型コロナウイルス感染拡大の予防及び国際交流会館居住者の感染防止・安全確保のため、下記の期間、居住者及び関係者以外の立入を禁止することとなりましたのでお知らせします。\n\n＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\n立入禁止期間\n２月２７日（木）～３月２４日（火）まで\n＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\n\nなお、今後の動向によっては、立入禁止の期間が変更される場合もあります。その場合は、改めてポータルの「お知らせ」にて連絡します。\n\n以　上" />
+
+      <LinearLayout
+        android:id="@+id/news_det_attach_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
     </LinearLayout>
   </ScrollView>

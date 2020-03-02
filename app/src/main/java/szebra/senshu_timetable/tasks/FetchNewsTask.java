@@ -104,10 +104,12 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   private boolean storeNewItems(Document doc, NewsCategory category) {
     Elements rows = doc.select("table.new_message  tr");
     News prevItem = null;
+    Log.d(getClass().getSimpleName(), "storeNewItems(): row: " + rows.html());
     for (Element row : rows) {
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
         String bodyText = row.selectFirst("div.new_message_normal div").ownText();
+        Log.d(getClass().getSimpleName(), "storeNewItems(): before: " + prevItem.getBody());
         int kikanPos = bodyText.indexOf("公開期間");
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -118,7 +120,6 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
           Integer.parseInt(bodyText.substring(kikanPos + 38, kikanPos + 40)));
         prevItem.setPublishEndDate(cal.getTime());
         bodyText = bodyText.substring(kikanPos + 41).trim();
-        Log.d(getClass().getSimpleName(), "storeNewItems(): new: " + bodyText);
         prevItem.setBody(bodyText);
   
         Elements attachmentLinks = row.select("div.message_file a");
@@ -131,6 +132,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
           }
         }
         realm.copyToRealmOrUpdate(prevItem);
+        Log.d(getClass().getSimpleName(), "storeNewItems(): after: " + prevItem.getBody().substring(0, 50));
         continue;
       }
       News newsItem = new News();
