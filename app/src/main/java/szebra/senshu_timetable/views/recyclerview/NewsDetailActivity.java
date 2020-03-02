@@ -105,9 +105,9 @@ public class NewsDetailActivity extends AppCompatActivity implements TaskCallbac
           task.setCallback(NewsDetailActivity.this);
           task.setFile(downloadFile);
           task.execute(attachment.getUri());
-          Toast.makeText(NewsDetailActivity.this, "Downloading..", Toast.LENGTH_SHORT).show();
+          Toast.makeText(NewsDetailActivity.this, R.string.downloading, Toast.LENGTH_SHORT).show();
         } else {
-          Toast.makeText(NewsDetailActivity.this, "Lacking Permisson. Please grant.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(NewsDetailActivity.this, R.string.lack_permission, Toast.LENGTH_SHORT).show();
         }
       }
     });

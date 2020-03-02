@@ -29,4 +29,6 @@
   <string name="tab_news_private">個人伝言</string>
   <string name="tab_news_public">お知らせ</string>
   <string name="tab_news_jobs">就職</string>
+  <string name="lack_permission">パーミッションが許可されていません。「ストレージへの書き込み」権限を許可してください。</string>
+  <string name="downloading">ダウンロード中…</string>
 </resources>

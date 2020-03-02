@@ -34,4 +34,6 @@
   <string name="tab_news_private">Personal</string>
   <string name="tab_news_public">Public</string>
   <string name="tab_news_jobs">Jobs</string>
+  <string name="downloading">Downloading...</string>
+  <string name="lack_permission">Permission denied. Prease allow Storage permssion.</string>
 </resources>

@@ -3,6 +3,7 @@ package szebra.senshu_timetable.views.recyclerview;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     holder.checkOpenIcon.setVisibility(item.isConfirmOpen() ? VISIBLE : GONE);
     holder.replyIcon.setVisibility(item.isReplyRequired() ? VISIBLE : GONE);
     holder.hasAttachIcon.setVisibility(item.hasAttachments() ? VISIBLE : GONE);
-    holder.dateLabel.setText(String.format("%d月%02d日", item.getPublishStartDate().getMonth() + 1, item.getPublishStartDate().getDate()));
+    holder.dateLabel.setText(DateFormat.getDateFormat(context).format(item.getPublishStartDate()));
   }
   
   @Override
