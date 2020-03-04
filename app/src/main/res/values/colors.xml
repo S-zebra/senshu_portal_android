@@ -6,5 +6,6 @@
   <color name="colorSubAccent">#5098FF</color>
   <color name="cellBorder">@color/primary_dark_material_light</color>
   <color name="cellBackground">@color/primary_material_light</color>
-  <color name="dimmed">#7f7f7f</color>
+  <color name="dimmed_text">#9f9f9f</color>
+  <color name="dimmed_back">#dfdfdf</color>
 </resources>

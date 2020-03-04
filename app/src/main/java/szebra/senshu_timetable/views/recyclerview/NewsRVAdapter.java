@@ -1,5 +1,6 @@
 package szebra.senshu_timetable.views.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -95,6 +96,7 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
     this.background = itemView.findViewById(R.id.news_item_background);
   }
   
+  @SuppressLint ("ResourceAsColor")
   public void setNews(News news, Context context) {
     bodyPrevLabel.setText(news.getBody());
     subjectLabel.setText(news.getSubject());
@@ -106,11 +108,11 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
     hasAttachIcon.setVisibility(news.hasAttachments() ? VISIBLE : GONE);
     dateLabel.setText(DateFormat.getDateFormat(context).format(news.getPublishStartDate()));
     if (news.isRead()) {
-      bodyPrevLabel.setTypeface(bodyPrevLabel.getTypeface(), Typeface.NORMAL);
-      subjectLabel.setTypeface(subjectLabel.getTypeface(), Typeface.NORMAL);
-      senderLabel.setTypeface(senderLabel.getTypeface(), Typeface.NORMAL);
-      dateLabel.setTypeface(dateLabel.getTypeface(), Typeface.NORMAL);
-      background.setBackgroundColor(context.getResources().getColor(R.color.cellBackground));
+      bodyPrevLabel.setTypeface(null, Typeface.NORMAL);
+      subjectLabel.setTypeface(null, Typeface.NORMAL);
+      senderLabel.setTypeface(null, Typeface.NORMAL);
+      dateLabel.setTypeface(null, Typeface.NORMAL);
+      background.setBackgroundColor(context.getResources().getColor(R.color.dimmed_back));
     }
   }
   

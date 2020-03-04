@@ -3,6 +3,7 @@ package szebra.senshu_timetable.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class NewsListFragment extends Fragment implements TaskCallback {
   private Realm realm;
   private RecyclerView recycler;
   private int catCode;
+  private SwipeRefreshLayout swipeRefreshLayout;
   
   @Nullable
   @Override
@@ -40,29 +42,42 @@ public class NewsListFragment extends Fragment implements TaskCallback {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    recycler = getView().findViewById(R.id.news_list);
     realm = Realm.getDefaultInstance();
     catCode = getArguments().getInt("CATEGORY");
-  
-  
-    Log.d(getClass().getSimpleName(), "onActivityCreated(): news1: " + realm.where(News.class).findFirst());
-    Log.d(getClass().getSimpleName(), "onActivityCreated(): catCode: " + catCode);
+    recycler = getView().findViewById(R.id.news_list);
+    swipeRefreshLayout = getView().findViewById(R.id.news_list_swipe_refresh);
+    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        fetchNewsOnline();
+        updateList();
+      }
+    });
     List<News> news = realm.where(News.class).equalTo("categoryCode", catCode).findAll();
     if (news.isEmpty()) {
-      Log.d(getClass().getSimpleName(), "onActivityCreated(): " + news + " Refreshing");
-      FetchNewsTask task = new FetchNewsTask();
-      task.setReference(this);
-      task.execute(NewsCategory.fromCode(catCode));
+      Log.d(getClass().getSimpleName(), "onActivityCreated(): " + news.size() + " Refreshing");
+      fetchNewsOnline();
       return;
     }
     updateList();
   }
   
+  private void fetchNewsOnline() {
+    swipeRefreshLayout.setRefreshing(true);
+    FetchNewsTask task = new FetchNewsTask();
+    task.setReference(this);
+    task.execute(NewsCategory.fromCode(catCode));
+    Log.d(getClass().getSimpleName(), "fetchNewsOnline(): updating " + NewsCategory.fromCode(catCode).toString());
+  }
+  
   private void updateList() {
     List<News> news = realm.where(News.class).equalTo("categoryCode", catCode).findAll();
-    Log.d(getClass().getSimpleName(), "updateList(): " + news.toString());
+//    Log.d(getClass().getSimpleName(), "updateList(): " + news.toString());
     recycler.setLayoutManager(new LinearLayoutManager(getContext()));
     recycler.setAdapter(new NewsRVAdapter(getContext(), news));
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
+    }
   }
   
   @Override
