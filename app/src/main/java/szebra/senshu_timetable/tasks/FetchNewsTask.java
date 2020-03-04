@@ -67,7 +67,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   
   private void fetchPage(NewsCategory category, boolean read) throws IOException, InvalidCredentialException {
     PortalCommunicator comm = PortalCommunicator.getInstance();
-    String url = read ? PortalURL.NEWS_URL_READ : PortalURL.NEWS_URL_UNREAD;
+    String url = PortalURL.NEWS_LIST + (read ? "?mode=read&" : "?");
     //最初に開く
     Document doc = comm.get(url);
     // カテゴリを設定
@@ -78,7 +78,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
     int maxPages = getMaxPages(doc);
     storeNewItems(doc, category, read);
     for (int curPage = 1; curPage < maxPages; curPage++) {
-      doc = comm.get(url + "?page=" + curPage);
+      doc = comm.get(url + "page=" + curPage);
       storeNewItems(doc, category, read);
       try {
         Thread.sleep(100);
@@ -98,11 +98,14 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   private boolean storeNewItems(Document doc, NewsCategory category, boolean read) {
     Elements rows = doc.select("table.new_message  tr");
     News prevItem = null;
-    Log.d(getClass().getSimpleName(), "storeNewItems(): row: " + rows.html());
     for (Element row : rows) {
+      Log.d(getClass().getSimpleName(), "storeNewItems(): row: " + row.html());
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
+        if (prevItem == null) continue;
         String bodyText = row.selectFirst("div.new_message_normal div").wholeText();
+        Log.d(getClass().getSimpleName(), "storeNewItems(): " + prevItem);
+        Log.d(getClass().getSimpleName(), "storeNewItems(): " + row);
         Log.d(getClass().getSimpleName(), "storeNewItems(): before: " + prevItem.getSubject() + "\n" + bodyText);
         int kikanPos = bodyText.indexOf("公開期間");
         Calendar cal = Calendar.getInstance();
@@ -130,12 +133,19 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
         Log.d(getClass().getSimpleName(), "storeNewItems(): after: " + prevItem.getBody().substring(0, 50));
         continue;
       }
-      News newsItem = new News();
       
       Element checkCol = cols.get(0);
       Element inElem = checkCol.getElementsByTag("input").first();
       int id = Integer.parseInt(inElem.attr("value"));
-      if (!realm.where(News.class).equalTo("id", id).findAll().isEmpty()) continue;
+  
+      News dupItem = realm.where(News.class).equalTo("id", id).findFirst();
+      if (dupItem != null) {
+        dupItem.setRead(read);
+        prevItem = null;
+        continue;
+      }
+  
+      News newsItem = new News();
       newsItem.setId(id);
       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       try {
