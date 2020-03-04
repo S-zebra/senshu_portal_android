@@ -1,4 +1,4 @@
-package szebra.senshu_timetable.views.recyclerview;
+package szebra.senshu_timetable.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -94,7 +94,7 @@ public class NewsDetailActivity extends AppCompatActivity implements TaskCallbac
     ContextThemeWrapper borderless = new ContextThemeWrapper(this, R.style.Widget_AppCompat_Button_Borderless);
     Button button = new Button(borderless);
     button.setText(attachment.getName());
-    button.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_attachment_black_24dp), null, null, null);
+//    button.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_attachment_black_24dp), null, null, null);
     downloadFile = new File(Environment.getExternalStorageDirectory() + "/Download/" + attachment.getName());
     button.setOnClickListener(new View.OnClickListener() {
       @Override

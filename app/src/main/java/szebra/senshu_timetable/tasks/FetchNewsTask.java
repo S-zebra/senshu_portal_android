@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.News;
 import szebra.senshu_timetable.models.NewsAttachment;
@@ -35,7 +36,8 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
     realm.beginTransaction();
     try {
       for (NewsCategory category : categories) {
-        fetchPage(category);
+        fetchPage(category, false);
+        fetchPage(category, true);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -58,39 +60,31 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   }
   
   private int getMaxPages(Document document) {
-    Elements links = document.select(".p_link a");
-    int maxNumber = -1;
-    for (Element e : links) {
-      String href = e.attr("href");
-      int curPageNum = -1;
-      try {
-        curPageNum = Integer.parseInt(href.substring(href.length() - 2, href.length() - 1));
-      } catch (NumberFormatException nfe) {
-        continue;
-      }
-      if (curPageNum > maxNumber) {
-        maxNumber = curPageNum;
-      }
-    }
-    return maxNumber;
+    Element selectBox = document.selectFirst("div.kensu select");
+    if (selectBox == null) return -1;
+    return selectBox.childrenSize();
   }
   
-  private void fetchPage(NewsCategory category) throws IOException, InvalidCredentialException {
+  private void fetchPage(NewsCategory category, boolean read) throws IOException, InvalidCredentialException {
     PortalCommunicator comm = PortalCommunicator.getInstance();
-    Document doc = comm.get(PortalURL.NEWS_URL_UNREAD);
+    String url = read ? PortalURL.NEWS_URL_READ : PortalURL.NEWS_URL_UNREAD;
+    //最初に開く
+    Document doc = comm.get(url);
     // カテゴリを設定
     HashMap<String, String> catData = new HashMap<>();
     catData.put("category_cd", String.valueOf(category.getNumVal()));
-    doc = comm.post(PortalURL.NEWS_URL_UNREAD, catData);
+    doc = comm.post(url, catData);
     Log.d(getClass().getSimpleName(), "fetchPage(): " + doc.html());
     int maxPages = getMaxPages(doc);
-    if (!storeNewItems(doc, category)) {
-      return;
-    }
-    for (int curPage = 1; curPage <= maxPages; curPage++) {
-      doc = comm.get(PortalURL.NEWS_URL_UNREAD + "?page=" + curPage);
-      if (!storeNewItems(doc, category)) {
-        break;
+    storeNewItems(doc, category, read);
+    for (int curPage = 1; curPage < maxPages; curPage++) {
+      doc = comm.get(url + "?page=" + curPage);
+      storeNewItems(doc, category, read);
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+        Thread.currentThread().interrupt();
       }
     }
   }
@@ -101,7 +95,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
    * @param doc <code>org.jsoup.Document</code> to parse
    * @return Whether there was a new message.
    */
-  private boolean storeNewItems(Document doc, NewsCategory category) {
+  private boolean storeNewItems(Document doc, NewsCategory category, boolean read) {
     Elements rows = doc.select("table.new_message  tr");
     News prevItem = null;
     Log.d(getClass().getSimpleName(), "storeNewItems(): row: " + rows.html());
@@ -109,7 +103,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
       Elements cols = row.getElementsByClass("bb");
       if (cols.isEmpty()) {
         String bodyText = row.selectFirst("div.new_message_normal div").wholeText();
-        Log.d(getClass().getSimpleName(), "storeNewItems(): before: " + prevItem.getBody());
+        Log.d(getClass().getSimpleName(), "storeNewItems(): before: " + prevItem.getSubject() + "\n" + bodyText);
         int kikanPos = bodyText.indexOf("公開期間");
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -124,6 +118,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
   
         Elements attachmentLinks = row.select("div.message_file a");
         if (!attachmentLinks.isEmpty()) {
+          prevItem.setAttachments(new RealmList<NewsAttachment>());
           for (Element aElem : attachmentLinks) {
             String fileId = aElem.attr("href").substring(40);
             String fileName = aElem.ownText();
@@ -140,7 +135,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
       Element checkCol = cols.get(0);
       Element inElem = checkCol.getElementsByTag("input").first();
       int id = Integer.parseInt(inElem.attr("value"));
-      if (!realm.where(News.class).equalTo("id", id).findAll().isEmpty()) return false;
+      if (!realm.where(News.class).equalTo("id", id).findAll().isEmpty()) continue;
       newsItem.setId(id);
       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       try {
@@ -155,7 +150,7 @@ public class FetchNewsTask extends AsyncTask<NewsCategory, Void, Exception> {
       newsItem.setConfirmOpen(!metaCol.getElementsByAttributeValueContaining("alt", "開封確認").isEmpty());
       newsItem.setHasAttachments(!metaCol.getElementsByAttributeValueContaining("alt", "添付あり").isEmpty());
       newsItem.setReplyRequired(!metaCol.getElementsByAttributeValueContaining("alt", "要返信").isEmpty());
-      
+      newsItem.setRead(read);
       newsItem.setCategory(category);
       if (newsItem.isConfirmOpen()) {
         String aHref = metaCol.selectFirst("a").attr("href");

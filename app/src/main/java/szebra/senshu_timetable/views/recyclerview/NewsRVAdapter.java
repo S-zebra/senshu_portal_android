@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.activities.NewsDetailActivity;
 import szebra.senshu_timetable.models.News;
 
 import static android.view.View.GONE;
