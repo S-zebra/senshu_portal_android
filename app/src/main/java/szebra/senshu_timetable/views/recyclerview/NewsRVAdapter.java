@@ -2,6 +2,8 @@ package szebra.senshu_timetable.views.recyclerview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -43,16 +45,7 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
   @Override
   public void onBindViewHolder(NewsViewHolder holder, int position, List<Object> payloads) {
     super.onBindViewHolder(holder, position, payloads);
-    News item = newsList.get(position);
-    holder.bodyPrevLabel.setText(item.getBody());
-    holder.subjectLabel.setText(item.getSubject());
-    holder.senderLabel.setText(item.getSender());
-    holder.importantIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
-    holder.newIcon.setVisibility(item.isImportant() ? View.VISIBLE : GONE);
-    holder.checkOpenIcon.setVisibility(item.isConfirmOpen() ? VISIBLE : GONE);
-    holder.replyIcon.setVisibility(item.isReplyRequired() ? VISIBLE : GONE);
-    holder.hasAttachIcon.setVisibility(item.hasAttachments() ? VISIBLE : GONE);
-    holder.dateLabel.setText(DateFormat.getDateFormat(context).format(item.getPublishStartDate()));
+    holder.setNews(newsList.get(position), context);
   }
   
   @Override
@@ -85,6 +78,7 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
   protected TextView senderLabel, subjectLabel, bodyPrevLabel, dateLabel;
   protected ImageView importantIcon, newIcon, checkOpenIcon, hasAttachIcon, replyIcon;
   protected CheckBox checkBox;
+  protected ConstraintLayout background;
   
   public NewsViewHolder(View itemView) {
     super(itemView);
@@ -98,6 +92,26 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
     this.hasAttachIcon = itemView.findViewById(R.id.news_item_ic_attach);
     this.checkBox = itemView.findViewById(R.id.news_item_checkbox);
     this.replyIcon = itemView.findViewById(R.id.news_item_ic_reply);
+    this.background = itemView.findViewById(R.id.news_item_background);
+  }
+  
+  public void setNews(News news, Context context) {
+    bodyPrevLabel.setText(news.getBody());
+    subjectLabel.setText(news.getSubject());
+    senderLabel.setText(news.getSender());
+    importantIcon.setVisibility(news.isImportant() ? View.VISIBLE : GONE);
+    newIcon.setVisibility(news.isImportant() ? View.VISIBLE : GONE);
+    checkOpenIcon.setVisibility(news.isConfirmOpen() ? VISIBLE : GONE);
+    replyIcon.setVisibility(news.isReplyRequired() ? VISIBLE : GONE);
+    hasAttachIcon.setVisibility(news.hasAttachments() ? VISIBLE : GONE);
+    dateLabel.setText(DateFormat.getDateFormat(context).format(news.getPublishStartDate()));
+    if (news.isRead()) {
+      bodyPrevLabel.setTypeface(bodyPrevLabel.getTypeface(), Typeface.NORMAL);
+      subjectLabel.setTypeface(subjectLabel.getTypeface(), Typeface.NORMAL);
+      senderLabel.setTypeface(senderLabel.getTypeface(), Typeface.NORMAL);
+      dateLabel.setTypeface(dateLabel.getTypeface(), Typeface.NORMAL);
+      background.setBackgroundColor(context.getResources().getColor(R.color.cellBackground));
+    }
   }
   
 }
