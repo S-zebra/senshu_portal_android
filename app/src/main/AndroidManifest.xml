@@ -14,7 +14,8 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-    <activity android:name=".activities.NewsDetailActivity"></activity>
+    <activity android:name=".AboutFragment"></activity>
+    <activity android:name=".activities.NewsDetailActivity" />
     <activity android:name=".activities.NewsListFragment" />
     <activity android:name=".activities.MainActivity">
       <intent-filter>
@@ -37,6 +38,7 @@
       android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     <service android:name=".AutoUpdater" />
+
     <provider
       android:name="android.support.v4.content.FileProvider"
       android:authorities="${applicationId}.provider"

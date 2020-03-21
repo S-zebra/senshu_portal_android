@@ -33,4 +33,9 @@
   <string name="downloading">ダウンロード中…</string>
   <string name="drawer_timetable">時間割</string>
   <string name="drawer_news">お知らせ</string>
+  <string name="label_about_version">バージョン %1$s</string>
+  <string name="label_about_email">Eメール: %1$s</string>
+  <string name="label_about_author">開発: %1$s</string>
+  <string name="label_about_cont_gh">%1$sでソースを見る</string>
+  <string name="drawer_about">アプリについて</string>
 </resources>

@@ -12,5 +12,9 @@
       android:id="@+id/drawer_item_news"
       android:icon="@drawable/ic_chat_black_24dp"
       android:title="@string/drawer_news" />
+    <item
+      android:id="@+id/drawer_item_about"
+      android:icon="@drawable/ic_info_black_24dp"
+      android:title="@string/drawer_about" />
   </group>
 </menu>

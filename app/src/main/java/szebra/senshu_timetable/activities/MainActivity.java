@@ -16,6 +16,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import szebra.senshu_timetable.AboutFragment;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.util.PortalCommunicator;
 
@@ -90,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         case R.id.drawer_item_news:
           newFragment = new NewsPagerFragment();
           fragmentsMap.put(menuItemId, newFragment);
+          break;
+        case R.id.drawer_item_about:
+          newFragment = new AboutFragment();
+          fragmentsMap.put(menuItemId, newFragment);
+          break;
+        default:
           break;
       }
     }
