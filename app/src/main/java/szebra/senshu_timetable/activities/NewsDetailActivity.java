@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -159,5 +160,13 @@ public class NewsDetailActivity extends AppCompatActivity implements TaskCallbac
     intent.setDataAndType(uri, getContentResolver().getType(uri));
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     startActivity(intent);
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      finish();
+    }
+    return true;
   }
 }

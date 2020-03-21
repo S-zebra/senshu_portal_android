@@ -42,7 +42,7 @@
   <string name="label_about_email">Email: %1$s</string>
   <string name="mail_address" translatable="false">shimashimazebra13@gmail.com</string>
   <string name="label_about_author">Made by %1$s</string>
-  <string name="author_name" translatable="false">S_zebra</string>
+  <string name="author_name" translatable="false">S-zebra</string>
   <string name="label_about_cont_gh">View source on %1$s</string>
   <string name="github_url" translatable="false">https://github.com/S-zebra/senshu_portal_andorid</string>
   <string name="url_tag" translatable="false"><a href="%1$s">%2$s</a></string>
