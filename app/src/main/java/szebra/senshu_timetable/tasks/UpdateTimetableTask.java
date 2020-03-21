@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.lang.ref.WeakReference;
 
 import io.realm.Realm;
+import szebra.senshu_timetable.LectureTerm;
 import szebra.senshu_timetable.PortalURL;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.tasks.callbacks.TaskCallback;
@@ -21,6 +22,7 @@ import szebra.senshu_timetable.util.PortalCommunicator;
 
 public final class UpdateTimetableTask extends AsyncTask<Void, Void, Throwable> {
   private WeakReference<TaskCallback> reference;
+  private LectureTerm term;
   
   public void setCallback(TaskCallback callback) {
     this.reference = new WeakReference<>(callback);
@@ -36,14 +38,18 @@ public final class UpdateTimetableTask extends AsyncTask<Void, Void, Throwable> 
   protected Throwable doInBackground(Void... voids) {
     PortalCommunicator communicator = PortalCommunicator.getInstance();
     try {
-      //TODO: TBD: 期の切り替えをどうするか
-      Document doc = communicator.get(PortalURL.TIMETABLE_LATTER_URL);
+      Document doc;
+      doc = communicator.get(term == LectureTerm.FIRST ? PortalURL.TIMETABLE_FIRST_URL : PortalURL.TIMETABLE_LATTER_URL);
       parse(doc);
     } catch (Exception e) {
       e.printStackTrace();
       return e;
     }
     return null;
+  }
+  
+  public void setTerm(LectureTerm term) {
+    this.term = term;
   }
   
   private void parse(Document document) {
@@ -78,7 +84,7 @@ public final class UpdateTimetableTask extends AsyncTask<Void, Void, Throwable> 
             className = currentCell.getElementsByTag("a").first().text().replaceAll("[\\[\\]]", "");
           }
           Log.d("Analyzer", "className: " + className);
-          Lecture currentLecture = new Lecture(kougiId, day, period, className, teacherName, classroomName, changeTypeName);
+          Lecture currentLecture = new Lecture(kougiId, day, period, term.getIntValue(), className, teacherName, classroomName, changeTypeName);
           realmConnection.copyToRealmOrUpdate(currentLecture);
         }
       }

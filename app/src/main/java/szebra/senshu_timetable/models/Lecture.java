@@ -12,6 +12,7 @@ public class Lecture extends RealmObject {
   private int id;
   private int day;
   private int period;
+  private int term;
   private String name;
   private String classroomName;
   private String teacherName;
@@ -20,14 +21,23 @@ public class Lecture extends RealmObject {
   public Lecture() {
   }
   
-  public Lecture(int id, int day, int period, String name, String teacherName, String classroomName, String changeTypeName) {
+  public Lecture(int id, int day, int period, int term, String name, String teacherName, String classroomName, String changeTypeName) {
     this.id = id;
     this.day = day;
     this.period = period;
+    this.term = term;
     this.name = name;
     this.classroomName = classroomName;
     this.teacherName = teacherName;
     this.changeTypeName = changeTypeName;
+  }
+  
+  public int getTerm() {
+    return term;
+  }
+  
+  public void setTerm(int term) {
+    this.term = term;
   }
   
   public int getId() {

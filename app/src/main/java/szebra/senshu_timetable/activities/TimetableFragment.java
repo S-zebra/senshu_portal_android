@@ -15,7 +15,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import io.realm.Realm;
+import szebra.senshu_timetable.LectureTerm;
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.tasks.UpdateTimetableTask;
@@ -38,6 +41,8 @@ public class TimetableFragment extends Fragment implements TaskCallback {
   private final boolean forceRefresh = true;
   private boolean readyToUpdate = false;
   private Realm realm;
+  private LectureTerm term;
+  
   
   @Nullable
   @Override
@@ -55,10 +60,41 @@ public class TimetableFragment extends Fragment implements TaskCallback {
     
     addtodayRow();
     realm = Realm.getDefaultInstance();
-    showProgressBar();
-    UpdateTimetableTask task = new UpdateTimetableTask();
-    task.setCallback(this);
-    task.execute();
+  
+    Calendar cal = Calendar.getInstance();
+    int month = cal.get(Calendar.MONTH);
+    if (month >= Calendar.APRIL && month <= Calendar.SEPTEMBER) {
+      term = LectureTerm.FIRST;
+    } else {
+      term = LectureTerm.LAST;
+    }
+    switchTerm(term);
+  }
+  
+  public void switchTerm(int menuId) {
+    switch (menuId) {
+      case R.id.menu_item_first:
+        switchTerm(LectureTerm.FIRST);
+        break;
+      case R.id.menu_item_last:
+        switchTerm(LectureTerm.LAST);
+        break;
+      default:
+        break;
+    }
+  }
+  
+  public void switchTerm(LectureTerm term) {
+    this.term = term;
+    if (realm.where(Lecture.class).equalTo("term", term.getIntValue()).findAll().isEmpty()) {
+      showProgressBar();
+      UpdateTimetableTask task = new UpdateTimetableTask();
+      task.setCallback(this);
+      task.setTerm(term);
+      task.execute();
+    } else {
+      setTimetable();
+    }
   }
   
   @Override
@@ -107,12 +143,17 @@ public class TimetableFragment extends Fragment implements TaskCallback {
   public void setTimetable() {
     for (int period = 0; period < rows.length; period++) {
       TableRow row = view.findViewById(rows[period]);
+      row.removeAllViews();
       PeriodHoursView phv = new PeriodHoursView(getActivity());
       phv.setPeriod(period);
       row.addView(phv);
       for (int day = 0; day < youbi.length; day++) {
         ClassCell cell = new ClassCell(getActivity());
-        cell.setLecture(realm.where(Lecture.class).equalTo("day", day).equalTo("period", period).findFirst());
+        cell.setLecture(realm.where(Lecture.class)
+          .equalTo("day", day)
+          .equalTo("period", period)
+          .equalTo("term", term.getIntValue())
+          .findFirst());
         row.addView(cell);
       }
     }

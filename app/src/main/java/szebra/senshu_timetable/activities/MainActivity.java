@@ -11,9 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 import szebra.senshu_timetable.AboutFragment;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   private DrawerLayout drawer;
   private HashMap<Integer, Fragment> fragmentsMap;
   private View drawerHeader;
+  private int currentMenuId;
+  private Fragment currentFragment;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +69,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   }
   
   @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    if (currentMenuId == 0) return false;
+    getMenuInflater().inflate(currentMenuId, menu);
+    Calendar cal = Calendar.getInstance();
+    int month = cal.get(Calendar.MONTH);
+    if (month >= Calendar.APRIL && month <= Calendar.SEPTEMBER) {
+      menu.findItem(R.id.menu_item_first).setChecked(true);
+    } else {
+      menu.findItem(R.id.menu_item_last).setChecked(true);
+    }
+    return true;
+  }
+  
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (drawerToggle.onOptionsItemSelected(item)) {
       return true;
+    }
+    if (currentFragment.getClass() == TimetableFragment.class) {
+      ((TimetableFragment) currentFragment).switchTerm(item.getItemId());
+      item.setChecked(true);
     }
     return super.onOptionsItemSelected(item);
   }
@@ -86,25 +108,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       switch (menuItemId) {
         case R.id.drawer_item_timetable:
           newFragment = new TimetableFragment();
-          fragmentsMap.put(menuItemId, newFragment);
+          currentMenuId = R.menu.timetable_menu;
           break;
         case R.id.drawer_item_news:
           newFragment = new NewsPagerFragment();
-          fragmentsMap.put(menuItemId, newFragment);
+          currentMenuId = 0;
           break;
         case R.id.drawer_item_about:
           newFragment = new AboutFragment();
-          fragmentsMap.put(menuItemId, newFragment);
+          currentMenuId = 0;
           break;
         default:
           break;
       }
     }
+  
+    fragmentsMap.put(menuItemId, newFragment);
+    invalidateOptionsMenu();
+    
     drawer.closeDrawers();
     getSupportFragmentManager()
       .beginTransaction()
       .replace(R.id.frame_main, newFragment)
       .commitAllowingStateLoss();
     drawer.closeDrawers();
+    currentFragment = newFragment;
   }
 }

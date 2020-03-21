@@ -47,4 +47,7 @@
   <string name="github_url" translatable="false">https://github.com/S-zebra/senshu_portal_andorid</string>
   <string name="url_tag" translatable="false"><a href="%1$s">%2$s</a></string>
   <string name="drawer_about">About</string>
+  <string name="menu_item_term">Term</string>
+  <string name="menu_item_term_first">First</string>
+  <string name="menu_item_term_last">Second</string>
 </resources>

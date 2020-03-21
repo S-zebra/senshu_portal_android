@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements TaskCallback {
       }
       setControlsEnabled(true);
       setBusyItems(false);
+      return;
     }
     Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
