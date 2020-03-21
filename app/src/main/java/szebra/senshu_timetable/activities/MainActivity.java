@@ -108,21 +108,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       switch (menuItemId) {
         case R.id.drawer_item_timetable:
           newFragment = new TimetableFragment();
-          currentMenuId = R.menu.timetable_menu;
           break;
         case R.id.drawer_item_news:
           newFragment = new NewsPagerFragment();
-          currentMenuId = 0;
           break;
         case R.id.drawer_item_about:
           newFragment = new AboutFragment();
-          currentMenuId = 0;
           break;
         default:
           break;
       }
     }
   
+    switch (menuItemId) {
+      case R.id.drawer_item_timetable:
+        currentMenuId = R.menu.timetable_menu;
+        break;
+      case R.id.drawer_item_news:
+        currentMenuId = 0;
+        break;
+      case R.id.drawer_item_about:
+        currentMenuId = 0;
+        break;
+      default:
+        break;
+    }
+    
     fragmentsMap.put(menuItemId, newFragment);
     invalidateOptionsMenu();
     
