@@ -1,16 +1,17 @@
 package szebra.senshu_timetable.views.recyclerview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,6 +54,13 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
   public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final RecyclerView rv = (RecyclerView) parent;
     final View newsItem = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false);
+    CheckBox checkBox = newsItem.findViewById(R.id.news_item_checkbox);
+    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.d(getClass().getSimpleName(), "onCheckedChanged(): " + context.getClass().getSimpleName());
+      }
+    });
     newsItem.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -62,6 +70,7 @@ public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         context.startActivity(intent);
       }
     });
+  
     return new NewsViewHolder(newsItem);
   }
   
@@ -96,7 +105,6 @@ class NewsViewHolder extends RecyclerView.ViewHolder {
     this.background = itemView.findViewById(R.id.news_item_background);
   }
   
-  @SuppressLint ("ResourceAsColor")
   public void setNews(News news, Context context) {
     bodyPrevLabel.setText(news.getBody());
     subjectLabel.setText(news.getSubject());

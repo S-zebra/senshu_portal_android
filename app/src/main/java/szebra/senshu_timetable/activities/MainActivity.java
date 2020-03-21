@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   private ActionBarDrawerToggle drawerToggle;
   private DrawerLayout drawer;
   private HashMap<Integer, Fragment> fragmentsMap;
+  private View drawerHeader;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     setContentView(R.layout.activity_main);
     NavigationView nv = findViewById(R.id.nav_view);
     nv.setNavigationItemSelectedListener(this);
-  
+    drawerHeader = nv.inflateHeaderView(R.layout.drawer_header);
+    
     Toolbar toolbar = findViewById(R.id.toolbar_main);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);

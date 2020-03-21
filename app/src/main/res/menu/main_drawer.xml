@@ -3,11 +3,14 @@
   <group
     android:id="@+id/drawer_group_1"
     android:checkableBehavior="single">
+
     <item
       android:id="@+id/drawer_item_timetable"
-      android:title="時間割" />
+      android:icon="@drawable/ic_view_module_black_24dp"
+      android:title="@string/drawer_timetable" />
     <item
       android:id="@+id/drawer_item_news"
-      android:title="お知らせ" />
+      android:icon="@drawable/ic_chat_black_24dp"
+      android:title="@string/drawer_news" />
   </group>
 </menu>

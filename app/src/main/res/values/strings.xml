@@ -36,4 +36,6 @@
   <string name="tab_news_jobs">Jobs</string>
   <string name="downloading">Downloading...</string>
   <string name="lack_permission">Permission denied. Prease allow Storage permssion.</string>
+  <string name="drawer_timetable">Timetable</string>
+  <string name="drawer_news">Messages</string>
 </resources>

@@ -3,10 +3,12 @@
   <!-- Base application theme. -->
   <style name="AppTheme" parent="@android:style/Theme.Light">
     <!-- Customize your theme here. -->
+    <item name="windowActionBarOverlay">true</item>
+    <item name="android:windowActionBarOverlay">true</item>
   </style>
 
-  <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-  <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+  <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
