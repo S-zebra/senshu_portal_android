@@ -14,12 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.HashMap;
 
+import io.realm.Realm;
 import szebra.senshu_timetable.AboutFragment;
 import szebra.senshu_timetable.R;
+import szebra.senshu_timetable.models.Credential;
 import szebra.senshu_timetable.util.PortalCommunicator;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView nv = findViewById(R.id.nav_view);
     nv.setNavigationItemSelectedListener(this);
     drawerHeader = nv.inflateHeaderView(R.layout.drawer_header);
+    TextView userNameLabel = drawerHeader.findViewById(R.id.drawer_label_username);
+    TextView userIdLabel = drawerHeader.findViewById(R.id.drawer_label_userid);
     
     Toolbar toolbar = findViewById(R.id.toolbar_main);
     setSupportActionBar(toolbar);
@@ -53,7 +58,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     if (!PortalCommunicator.getInstance().hasCredential()) {
       startActivity(new Intent(this, LoginActivity.class));
       finish();
+    } else {
+      Realm realm = Realm.getDefaultInstance();
+      Credential c = realm.where(Credential.class).findFirst();
+      userNameLabel.setText(c.getUserFullName());
+      userIdLabel.setText(c.getUserName());
+      realm.close();
     }
+  
   }
   
   @Override

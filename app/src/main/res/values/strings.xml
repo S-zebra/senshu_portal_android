@@ -50,4 +50,6 @@
   <string name="menu_item_term">Term</string>
   <string name="menu_item_term_first">First</string>
   <string name="menu_item_term_last">Second</string>
+  <string name="label_welcome">Welcome to Senshu Portal!</string>
+  <string name="label_welcome_login">Enter your student ID and password to login.</string>
 </resources>

@@ -10,11 +10,20 @@ import io.realm.annotations.PrimaryKey;
 public class Credential extends RealmObject {
   @PrimaryKey
   private String userName;
+  private String userFullName;
   private String password;
   
   public Credential(String userName, String password) {
     this.userName = userName;
     this.password = password;
+  }
+  
+  public String getUserFullName() {
+    return userFullName;
+  }
+  
+  public void setUserFullName(String userFullName) {
+    this.userFullName = userFullName;
   }
   
   public Credential() {

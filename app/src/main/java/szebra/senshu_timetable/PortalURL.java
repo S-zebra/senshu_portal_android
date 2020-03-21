@@ -6,7 +6,7 @@ package szebra.senshu_timetable;
 
 public final class PortalURL {
   private static final String PORTAL_URL = "https://sps.acc.senshu-u.ac.jp/ActiveCampus/module/";
-  //  public static final String MY_PAGE_URL = PORTAL_URL + "MyPage.php";
+  public static final String MY_PAGE_URL = PORTAL_URL + "MyPage.php";
   public static final String LOGIN_URL = PORTAL_URL + "Login.php";
   public static final String CHANGES_URL = PORTAL_URL + "Kyuko.php";
   public static final String TIMETABLE_LATTER_URL = PORTAL_URL + "Jikanwari.php?mode=latter";

@@ -3,6 +3,7 @@ package szebra.senshu_timetable.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,17 +39,31 @@ public class LoginActivity extends AppCompatActivity implements TaskCallback {
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (!isInputValid()) return;
-        setControlsEnabled(false);
-        setBusyItems(true);
-        LoginTask loginTask = new LoginTask();
-        loginTask.setCallback(LoginActivity.this);
-        String userName = usernameBox.getText().toString();
-        String password = passwordBox.getText().toString();
-        credential = new Credential(userName, password);
-        loginTask.execute(credential);
+        onLoginButtonClicked();
       }
     });
+    passwordBox.setOnKeyListener(new View.OnKeyListener() {
+      @Override
+      public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+          onLoginButtonClicked();
+          return true;
+        }
+        return false;
+      }
+    });
+  }
+  
+  private void onLoginButtonClicked() {
+    if (!isInputValid()) return;
+    setControlsEnabled(false);
+    setBusyItems(true);
+    LoginTask loginTask = new LoginTask();
+    loginTask.setCallback(LoginActivity.this);
+    String userName = usernameBox.getText().toString();
+    String password = passwordBox.getText().toString();
+    credential = new Credential(userName, password);
+    loginTask.execute(credential);
   }
   
   private boolean isInputValid() {

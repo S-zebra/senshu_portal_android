@@ -41,4 +41,6 @@
   <string name="menu_item_term_first">前期</string>
   <string name="menu_item_term_last">後期</string>
   <string name="menu_item_term">学期</string>
+  <string name="label_welcome">専修大学ポータルアプリへようこそ！</string>
+  <string name="label_welcome_login">学籍番号とパスワードを入力して、ポータルにログインしましょう。</string>
 </resources>
