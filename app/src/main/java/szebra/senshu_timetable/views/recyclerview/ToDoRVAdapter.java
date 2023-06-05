@@ -2,12 +2,13 @@ package szebra.senshu_timetable.views.recyclerview;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,16 +26,16 @@ import szebra.senshu_timetable.models.ToDo;
  * Created by s-zebra on 2018/05/27.
  */
 public class ToDoRVAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
-  private RealmResults<ToDo> todos;
-  private LayoutInflater inflater;
-  private Resources res;
-  
+  private final RealmResults<ToDo> todos;
+  private final LayoutInflater inflater;
+  private final Resources res;
+
   public ToDoRVAdapter(Context context, RealmResults<ToDo> todos) {
     this.todos = todos;
     this.res = context.getResources();
     inflater = LayoutInflater.from(context);
   }
-  
+
   @Override
   public void onBindViewHolder(ToDoViewHolder holder, int position) {
     onBindViewHolder(holder, position, null);
@@ -84,7 +85,7 @@ public class ToDoRVAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
     todayCal.clear(Calendar.MILLISECOND);
     
     Date today = todayCal.getTime();
-    Log.d("DateGap", date.toString() + ", " + today.toString());
+    Log.d("DateGap", date.toString() + ", " + today);
     long diffMS = Math.abs(date.getTime() - today.getTime());
     return (int) (diffMS / 86400000);
   }

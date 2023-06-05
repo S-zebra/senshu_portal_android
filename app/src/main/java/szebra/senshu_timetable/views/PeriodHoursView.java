@@ -2,11 +2,12 @@ package szebra.senshu_timetable.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.util.ClassHours;
@@ -39,9 +40,9 @@ public class PeriodHoursView extends ConstraintLayout {
     View layout = View.inflate(context, R.layout.period_hours_view, this);
     Log.d("Inflater", "PeriodHoursView Inflated");
     Log.d("Inflater", "Width: " + this.getWidth());
-    startTimeLabel = (TextView) layout.findViewById(R.id.start_time);
-    hourLabel = (TextView) layout.findViewById(R.id.hour);
-    endTimeLabel = (TextView) layout.findViewById(R.id.end_time);
+    startTimeLabel = layout.findViewById(R.id.start_time);
+    hourLabel = layout.findViewById(R.id.hour);
+    endTimeLabel = layout.findViewById(R.id.end_time);
     startTimeLabel.setText("");
     hourLabel.setText("");
     endTimeLabel.setText("");

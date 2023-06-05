@@ -2,7 +2,8 @@ package szebra.senshu_timetable;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by s-zebra on 2018/07/03.

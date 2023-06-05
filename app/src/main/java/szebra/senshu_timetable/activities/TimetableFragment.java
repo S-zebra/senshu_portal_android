@@ -2,8 +2,6 @@ package szebra.senshu_timetable.activities;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 
@@ -29,17 +30,17 @@ import szebra.senshu_timetable.views.PeriodHoursView;
 public class TimetableFragment extends Fragment implements TaskCallback {
   private TableLayout timetable;
   private View view;
-  
-  private int[] rows = {
-    R.id.row_1st, R.id.row_2nd, R.id.row_3rd,
-    R.id.row_4th, R.id.row_5th, R.id.row_6th,
-    R.id.row_7th};
-  private static String[] youbi = {"月", "火", "水", "木", "金", "土"};
+
+  private final int[] rows = {
+          R.id.row_1st, R.id.row_2nd, R.id.row_3rd,
+          R.id.row_4th, R.id.row_5th, R.id.row_6th,
+          R.id.row_7th};
+  private static final String[] youbi = {"月", "火", "水", "木", "金", "土"};
   
   private ProgressBar mProgressBar;
   private TextView mWaitingLabel;
   private final boolean forceRefresh = true;
-  private boolean readyToUpdate = false;
+  private final boolean readyToUpdate = false;
   private Realm realm;
   private LectureTerm term;
   

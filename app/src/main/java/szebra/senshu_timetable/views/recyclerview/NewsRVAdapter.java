@@ -1,10 +1,11 @@
 package szebra.senshu_timetable.views.recyclerview;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,29 +16,29 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 import szebra.senshu_timetable.R;
 import szebra.senshu_timetable.activities.NewsDetailActivity;
 import szebra.senshu_timetable.models.News;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 /**
  * Created by s-zebra on 2/29/20.
  */
 public class NewsRVAdapter extends RecyclerView.Adapter<NewsViewHolder> {
-  private LayoutInflater inflater;
-  private Context context;
-  private List<News> newsList;
-  
+  private final LayoutInflater inflater;
+  private final Context context;
+  private final List<News> newsList;
+
   public NewsRVAdapter(LayoutInflater inflater, Context context, List<News> newsList) {
     this.inflater = inflater;
     this.context = context;
     this.newsList = newsList;
   }
-  
+
   public NewsRVAdapter(Context context, List<News> newsList) {
     this.inflater = LayoutInflater.from(context);
     this.context = context;

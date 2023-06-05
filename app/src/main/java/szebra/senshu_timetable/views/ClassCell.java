@@ -1,13 +1,17 @@
 package szebra.senshu_timetable.views;
 
+import static szebra.senshu_timetable.R.id.cell;
+import static szebra.senshu_timetable.R.id.classroom;
+
 import android.content.Context;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 
@@ -16,26 +20,25 @@ import szebra.senshu_timetable.activities.ChangeListActivity;
 import szebra.senshu_timetable.models.Lecture;
 import szebra.senshu_timetable.util.ClassHours;
 
-import static szebra.senshu_timetable.R.id.cell;
-import static szebra.senshu_timetable.R.id.classroom;
-
 /**
  * Created by s-zebra on 2017/11/27.
  */
 
 public class ClassCell extends ConstraintLayout {
   //コンストラクタ
-  private TextView className, classRoom, teacherName;
-  private ImageView changeIcon;
+  private final TextView className;
+  private final TextView classRoom;
+  private final TextView teacherName;
+  private final ImageView changeIcon;
   private Lecture lecture;
   private int lectureId;
   private ConstraintLayout cr;
   private int day, period;
-  
+
   public ClassCell(Context context) {
     this(context, null);
   }
-  
+
   public ClassCell(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }

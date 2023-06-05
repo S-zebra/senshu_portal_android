@@ -3,8 +3,6 @@ package szebra.senshu_timetable.activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +12,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,7 +93,7 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
     if (todoId == -1) {
       int lastId = 0;
       try {
-        lastId = mRealm.where(ToDo.class).findAllSorted("id", Sort.DESCENDING).first().getId();
+        lastId = mRealm.where(ToDo.class).findAll().sort("id", Sort.DESCENDING).first().getId();
       } catch (IndexOutOfBoundsException e) {
         Log.i("ToDoEditActivity", "Todoがありません");
       }
@@ -114,7 +115,7 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
   }
   
   public void prepareLectureSpinner() {
-    RealmResults<Lecture> results = mRealm.where(Lecture.class).findAllSorted("id");
+    RealmResults<Lecture> results = mRealm.where(Lecture.class).findAll().sort("id");
     int curPos = 0;
     for (Lecture lecture : results) {
       if (lecture.getId() == targetLecture.getId()) {
@@ -122,7 +123,7 @@ public class ToDoEditActivity extends AppCompatActivity implements DatePickerDia
       } else {
         curPos++;
       }
-      Log.d("ToDoEditActivity", "CurPos: " + String.valueOf(curPos));
+      Log.d("ToDoEditActivity", "CurPos: " + curPos);
     }
     Lecture[] lectures = new Lecture[results.size()];
     results.toArray(lectures);

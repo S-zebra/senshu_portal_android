@@ -1,11 +1,12 @@
 package szebra.senshu_timetable.views.recyclerview;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -17,15 +18,15 @@ import szebra.senshu_timetable.models.ChangeInfo;
  * Created by s-zebra on 2018/06/30.
  */
 public class ChangeRVAdapter extends RecyclerView.Adapter<ChangeViewHolder> {
-  private LayoutInflater inflater;
-  private List<ChangeInfo> changeList;
-  private Context context;
-  
+  private final LayoutInflater inflater;
+  private final List<ChangeInfo> changeList;
+  private final Context context;
+
   @Override
   public void onBindViewHolder(ChangeViewHolder holder, int position) {
-  
+
   }
-  
+
   public ChangeRVAdapter(Context context, List<ChangeInfo> results) {
     inflater = LayoutInflater.from(context);
     this.changeList = results;

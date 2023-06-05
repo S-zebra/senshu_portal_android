@@ -1,9 +1,10 @@
 package szebra.senshu_timetable.util;
 
-import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+
+import androidx.multidex.MultiDexApplication;
 
 import java.security.Key;
 
@@ -15,16 +16,16 @@ import szebra.senshu_timetable.models.Credential;
  * Created by s-zebra on 2018/04/22.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
   private static MyApplication instance;
-  
+
   @Override
   public void onCreate() {
     super.onCreate();
-    
+
     //Prepare encryption key
     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-    
+
     String currentEncodedKey = pref.getString("key", "");
     if (currentEncodedKey.length() == 0) {
       Key newKey = CryptManager.generateKey();

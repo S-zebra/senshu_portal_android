@@ -70,7 +70,7 @@ public final class UpdateChangesTask extends AsyncTask<Void, Void, Throwable> {
     }
     Elements rows = table.getElementsByAttributeValueStarting("class", "tr_y");
     
-    RealmResults<ChangeInfo> results = realm.where(ChangeInfo.class).findAllSorted("id", Sort.DESCENDING);
+    RealmResults<ChangeInfo> results = realm.where(ChangeInfo.class).findAll().sort("id", Sort.DESCENDING);
     int lastIndex = 0;
     if (results.size() > 0) {
       lastIndex = results.first().id;

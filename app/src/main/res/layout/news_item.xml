@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/news_item_background"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:clickable="true"
-  android:focusable="true">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/news_item_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
 
-  <TextView
-    android:id="@+id/news_item_sender"
+    <TextView
+        android:id="@+id/news_item_sender"
     android:layout_width="0dp"
     android:layout_height="21dp"
     android:layout_marginStart="8dp"
@@ -132,13 +132,13 @@
     app:layout_constraintTop_toBottomOf="@+id/news_item_sender"
     tools:text="新型コロナウイルス感染症拡大に伴うイベント等の対応について" />
 
-  <ImageView
-    android:id="@+id/news_item_ic_reply"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="@+id/news_item_checkbox"
-    app:layout_constraintStart_toStartOf="@+id/news_item_checkbox"
-    app:layout_constraintTop_toBottomOf="@+id/news_item_checkbox"
-    app:srcCompat="@drawable/ic_reply_black_24dp" />
+    <ImageView
+        android:id="@+id/news_item_ic_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/news_item_checkbox"
+        app:layout_constraintStart_toStartOf="@+id/news_item_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/news_item_checkbox"
+        app:srcCompat="@drawable/ic_reply_black_24dp" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
